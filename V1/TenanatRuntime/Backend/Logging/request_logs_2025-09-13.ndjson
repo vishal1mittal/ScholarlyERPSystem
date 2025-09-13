@@ -1,0 +1,100 @@
+{
+  "timestamp_utc": "2025-09-13T18:41:42.634Z",
+  "timestamp_local": "14/9/2025, 12:11:42 am",
+  "request": {
+    "method": "POST",
+    "route": "/test-insert-tenant",
+    "body": {
+      "uuid": "2db3c240-f9b7-4a89-bf12-339bfcd289b1"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "error": "Internal Server Error"
+    }
+  }
+}
+{
+  "timestamp_utc": "2025-09-13T18:41:16.784Z",
+  "timestamp_local": "14/9/2025, 00:11:16",
+  "request": {
+    "method": "POST",
+    "route": "/test-insert-tenant",
+    "body": {
+      "uuid": "2db3c240-f9b7-4a89-bf12-339bfcd289b1"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "error": "Internal Server Error"
+    }
+  }
+}
+{
+  "timestamp": "2025-09-13T18:38:10.632Z",
+  "request": {
+    "method": "POST",
+    "route": "/test-insert-tenant",
+    "body": {
+      "uuid": "2db3c240-f9b7-4a89-bf12-339bfcd289b1"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "error": "Internal Server Error"
+    }
+  }
+}
+{
+  "timestamp": "2025-09-13T18:32:16.692Z",
+  "request": {
+    "method": "POST",
+    "route": "/test-insert-tenant",
+    "body": {
+      "uuid": "2db3c240-f9b7-4a89-bf12-339bfcd289b1"
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "message": "Tenant added successfully for testing.",
+      "tenant_id": "2db3c240-f9b7-4a89-bf12-339bfcd289b1"
+    }
+  }
+}
+{
+  "timestamp": "2025-09-13T18:28:09.608Z",
+  "request": {
+    "method": "POST",
+    "route": "/test-insert-tenant",
+    "body": {
+      "uuid": "2db3c240-f9b7-4a89-bf12-339bfcd289b2"
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "message": "Tenant added successfully for testing.",
+      "tenant_id": "2db3c240-f9b7-4a89-bf12-339bfcd289b2"
+    }
+  }
+}
+{
+  "timestamp": "2025-09-13T18:27:57.520Z",
+  "request": {
+    "method": "POST",
+    "route": "/test-insert-tenant",
+    "body": {
+      "uuid": "2db3c240-f9b7-4a89-bf12-339bfcd289b3"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "error": "Internal Server Error"
+    }
+  }
+}

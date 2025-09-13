@@ -1,9 +1,10 @@
 const express = require("express");
 const db = require("./DB/db"); // Import our database module
+const loggingMiddleware = require("./Logging/loggingMiddleware");
 
 const app = express();
-
 app.use(express.json()); // Middleware to parse JSON request bodies
+app.use(loggingMiddleware);
 
 app.get("/users", async (req, res) => {
     try {
@@ -16,8 +17,9 @@ app.get("/users", async (req, res) => {
 });
 
 app.post("/test-insert-tenant", async (req, res) => {
+    var id = req.body.uuid;
     try {
-        const newTenantId = "2db3c240-f9b7-4a89-bf12-339bfcd289b9";
+        const newTenantId = id;
         const queryText = "INSERT INTO tenants(id) VALUES($1) RETURNING id";
         const result = await db.query(queryText, [newTenantId]);
 
@@ -26,7 +28,7 @@ app.post("/test-insert-tenant", async (req, res) => {
             tenant_id: result.rows[0].id,
         });
     } catch (err) {
-        console.error("Error during test insertion:", err);
+        //console.error("Error during test insertion:", err);
         res.status(500).json({ error: "Internal Server Error" });
     }
 });

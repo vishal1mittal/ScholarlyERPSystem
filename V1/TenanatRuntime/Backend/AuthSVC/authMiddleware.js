@@ -1,15 +1,7 @@
 const jwt = require("jsonwebtoken");
 const db = require("./DB/db"); // Import our database module
-const { createErrorResponse } = require("./errorModule"); // Using the Canvas
+const createErrorResponse = require("../Error/errorHandler");
 require("dotenv").config();
-
-const pool = new Pool({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT,
-});
 
 /**
  * Middleware to authenticate a user by verifying a JWT access token.
@@ -21,8 +13,7 @@ async function authenticate(req, res, next) {
     const token = authHeader && authHeader.split(" ")[1];
 
     if (!token) {
-        const error = createErrorResponse("UNAUTHORIZED", "No token provided.");
-        return res.status(error.httpStatus).json(error);
+        return res.status(401).json("No token provided.");
     }
 
     try {
@@ -32,18 +23,14 @@ async function authenticate(req, res, next) {
             SELECT id, email, role, mfa_enabled, is_active FROM users
             WHERE id = $1 AND tenant_id = $2
         `;
-        const userResult = await pool.query(userQuery, [
+        const userResult = await db.query(userQuery, [
             payload.id,
             payload.tenant_id,
         ]);
         const user = userResult.rows[0];
 
         if (!user || !user.is_active) {
-            const error = createErrorResponse(
-                "UNAUTHORIZED",
-                "User not found or is inactive."
-            );
-            return res.status(error.httpStatus).json(error);
+            return res.status(401).json("User not found or is inactive.");
         }
 
         // The report specifies that the access token should be short-lived, so we don't need to check
@@ -62,7 +49,7 @@ async function authenticate(req, res, next) {
             "UNAUTHORIZED",
             "Invalid or expired token."
         );
-        return res.status(errResponse.httpStatus).json(errResponse);
+        return res.status(401).json(errResponse);
     }
 }
 
