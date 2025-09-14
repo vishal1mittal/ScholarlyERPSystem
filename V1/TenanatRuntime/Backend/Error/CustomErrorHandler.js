@@ -1,7 +1,10 @@
 class CustomError extends Error {
-    constructor(message, httpStatus, errorCode) {
-        super(message);
-        this.httpStatus = httpStatus;
+    constructor(errorCode, customMessage) {
+        const errorDetails =
+            errorMap[errorCode] || errorMap.INTERNAL_SERVER_ERROR;
+        super(customMessage || errorDetails.message);
+
+        this.httpStatus = errorDetails.httpStatus;
         this.errorCode = errorCode;
         this.name = this.constructor.name;
         Error.captureStackTrace(this, this.constructor);
@@ -19,7 +22,7 @@ const errorMap = {
         message: "Internal Server Error",
     },
 
-    // Custom internal errors for specific modules (as per the report)
+    // Custom internal errors
     "AUTH-401": { httpStatus: 401, message: "Invalid Credentials" },
     "AUTH-409": { httpStatus: 409, message: "Email Already Exists" },
     "STUDENT-404": { httpStatus: 404, message: "Student Not Found" },
@@ -28,22 +31,21 @@ const errorMap = {
 };
 
 /**
- * Creates a standardized error response object.
- * @param {string} errorCode - The custom internal error code (e.g., 'AUTH-401').
- * @param {string} [customMessage] - An optional message to override the default.
- * @returns {object} The standardized error response.
+ * Factory to create a standardized CustomError
  */
-function createErrorResponse(errorCode, customMessage) {
-    const errorDetails = errorMap[errorCode] || errorMap.INTERNAL_SERVER_ERROR;
+function createError(errorCode, customMessage) {
+    return formatErrorResponse(new CustomError(errorCode, customMessage));
+}
+
+/**
+ * Converts error to JSON response
+ */
+function formatErrorResponse(err) {
     return {
-        code: errorCode,
-        httpStatus: errorDetails.httpStatus,
-        message: customMessage || errorDetails.message,
+        code: err.errorCode || "INTERNAL_SERVER_ERROR",
+        httpStatus: err.httpStatus || 500,
+        message: err.message || "Internal Server Error",
     };
 }
 
-module.exports = {
-    CustomError,
-    createErrorResponse,
-    errorMap,
-};
+module.exports = createError;

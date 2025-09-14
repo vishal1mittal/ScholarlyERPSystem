@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 function loggingMiddleware(req, res, next) {
-    const dateStr = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    const dateStr = new Date().toISOString().slice(0, 10);
     const logFile = path.join(__dirname, `request_logs_${dateStr}.ndjson`);
     const now = new Date();
 
@@ -14,8 +14,11 @@ function loggingMiddleware(req, res, next) {
             route: req.originalUrl,
             body: req.body,
         },
-        response: {}, // will be filled later
+        response: {},
     };
+
+    // 🔹 Attach to req so errorLoggerMiddleware can add errors
+    req._requestLog = requestLog;
 
     const originalJson = res.json;
     res.json = function (data) {
@@ -23,8 +26,6 @@ function loggingMiddleware(req, res, next) {
             status: res.statusCode,
             body: data,
         };
-        saveLog(logFile, requestLog);
-
         return originalJson.apply(res, arguments);
     };
 
@@ -38,11 +39,14 @@ function loggingMiddleware(req, res, next) {
                 status: res.statusCode,
                 body: data,
             };
-            saveLog(logFile, requestLog);
         }
-
         return originalSend.apply(res, arguments);
     };
+
+    // 🔹 Write once, after response (or error) finishes
+    res.on("finish", () => {
+        saveLog(logFile, requestLog);
+    });
 
     next();
 }

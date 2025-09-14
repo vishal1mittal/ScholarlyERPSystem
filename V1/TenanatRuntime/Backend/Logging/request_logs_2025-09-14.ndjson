@@ -1,0 +1,140 @@
+{
+  "timestamp_utc": "2025-09-14T10:11:02.001Z",
+  "timestamp_local": "14/9/2025, 3:41:02 pm",
+  "request": {
+    "method": "POST",
+    "route": "/test-insert-tenant",
+    "body": {
+      "uuid": "2"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "code": "INTERNAL_SERVER_ERROR",
+      "httpStatus": 500,
+      "message": "Internal Server Error"
+    }
+  },
+  "error": {
+    "message": "invalid input syntax for type uuid: \"2\"",
+    "stack": [
+      "error: invalid input syntax for type uuid: \"2\"",
+      "    at D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\pg-pool\\index.js:45:11",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
+      "    at async D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\index.js:26:24"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-14T10:10:41.291Z",
+  "timestamp_local": "14/9/2025, 3:40:41 pm",
+  "request": {
+    "method": "POST",
+    "route": "/test-insert-tenant",
+    "body": {
+      "uuid": "2"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "code": "INTERNAL_SERVER_ERROR",
+      "httpStatus": 500,
+      "message": "You are invalid"
+    }
+  },
+  "error": {
+    "message": "invalid input syntax for type uuid: \"2\"",
+    "stack": [
+      "error: invalid input syntax for type uuid: \"2\"",
+      "    at D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\pg-pool\\index.js:45:11",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
+      "    at async D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\index.js:26:24"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-14T10:10:31.540Z",
+  "timestamp_local": "14/9/2025, 3:40:31 pm",
+  "request": {
+    "method": "POST",
+    "route": "/test-insert-tenant",
+    "body": {
+      "uuid": "2db3c240-f9b7-4a89-bf12-339bfcd289b1"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "code": "INTERNAL_SERVER_ERROR",
+      "httpStatus": 500,
+      "message": "You are invalid"
+    }
+  },
+  "error": {
+    "message": "duplicate key value violates unique constraint \"tenants_pkey\"",
+    "stack": [
+      "error: duplicate key value violates unique constraint \"tenants_pkey\"",
+      "    at D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\pg-pool\\index.js:45:11",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
+      "    at async D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\index.js:26:24"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-14T10:08:45.963Z",
+  "timestamp_local": "14/9/2025, 3:38:45 pm",
+  "request": {
+    "method": "POST",
+    "route": "/test-insert-tenant",
+    "body": {
+      "uuid": "2db3c240-f9b7-4a89-bf12-339bfcd289b1"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "code": "INTERNAL_SERVER_ERROR",
+      "httpStatus": 500,
+      "message": "You are invalid"
+    }
+  },
+  "error": {
+    "message": "duplicate key value violates unique constraint \"tenants_pkey\"",
+    "stack": [
+      "error: duplicate key value violates unique constraint \"tenants_pkey\"",
+      "    at D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\pg-pool\\index.js:45:11",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
+      "    at async D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\index.js:26:24"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-14T10:06:16.164Z",
+  "timestamp_local": "14/9/2025, 3:36:16 pm",
+  "request": {
+    "method": "POST",
+    "route": "/test-insert-tenant",
+    "body": {
+      "uuid": "2db3c240-f9b7-4a89-bf12-339bfcd289b1"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "code": "INTERNAL_SERVER_ERROR",
+      "httpStatus": 500,
+      "message": "You are invalid"
+    }
+  },
+  "error": {
+    "message": "duplicate key value violates unique constraint \"tenants_pkey\"",
+    "stack": [
+      "error: duplicate key value violates unique constraint \"tenants_pkey\"",
+      "    at D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\pg-pool\\index.js:45:11",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
+      "    at async D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\index.js:26:24"
+    ]
+  }
+}

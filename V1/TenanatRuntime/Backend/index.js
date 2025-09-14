@@ -1,6 +1,8 @@
 const express = require("express");
 const db = require("./DB/db"); // Import our database module
 const loggingMiddleware = require("./Logging/loggingMiddleware");
+const errorLoggerMiddleware = require("./Logging/errorLoggerMiddleware");
+const createError = require("./Error/CustomErrorHandler");
 
 const app = express();
 app.use(express.json()); // Middleware to parse JSON request bodies
@@ -16,7 +18,7 @@ app.get("/users", async (req, res) => {
     }
 });
 
-app.post("/test-insert-tenant", async (req, res) => {
+app.post("/test-insert-tenant", async (req, res, next) => {
     var id = req.body.uuid;
     try {
         const newTenantId = id;
@@ -28,8 +30,8 @@ app.post("/test-insert-tenant", async (req, res) => {
             tenant_id: result.rows[0].id,
         });
     } catch (err) {
-        //console.error("Error during test insertion:", err);
-        res.status(500).json({ error: "Internal Server Error" });
+        res.status(500).json(createError("INTERNAL_SERVER_ERROR"));
+        next(err);
     }
 });
 
@@ -38,3 +40,5 @@ app.listen(process.env.SERVER_PORT || 3001, () => {
         `Server running on http://localhost:${process.env.SERVER_PORT || 3001}`
     );
 });
+
+app.use(errorLoggerMiddleware);
