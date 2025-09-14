@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const db = require("./DB/db"); // Import our database module
-const createErrorResponse = require("../Error/errorHandler");
+const createError = require("../Error/CustomErrorHandler");
 require("dotenv").config();
 
 /**
@@ -13,7 +13,9 @@ async function authenticate(req, res, next) {
     const token = authHeader && authHeader.split(" ")[1];
 
     if (!token) {
-        return res.status(401).json("No token provided.");
+        return res
+            .status(401)
+            .json(createError("UNAUTHORIZED", "No token provided."));
     }
 
     try {
@@ -30,7 +32,14 @@ async function authenticate(req, res, next) {
         const user = userResult.rows[0];
 
         if (!user || !user.is_active) {
-            return res.status(401).json("User not found or is inactive.");
+            return res
+                .status(401)
+                .json(
+                    createError(
+                        "UNAUTHORIZED",
+                        "User not found or is inactive."
+                    )
+                );
         }
 
         // The report specifies that the access token should be short-lived, so we don't need to check
@@ -44,12 +53,9 @@ async function authenticate(req, res, next) {
         };
         next();
     } catch (error) {
-        console.error("JWT Verification Error:", error.message);
-        const errResponse = createErrorResponse(
-            "UNAUTHORIZED",
-            "Invalid or expired token."
-        );
-        return res.status(401).json(errResponse);
+        return res
+            .status(401)
+            .json(createError("UNAUTHORIZED", "Invalid or expired token."));
     }
 }
 
@@ -60,21 +66,27 @@ async function authenticate(req, res, next) {
 function authorize(...allowedRoles) {
     return (req, res, next) => {
         if (!req.user || !req.user.role) {
-            const error = createErrorResponse(
-                "FORBIDDEN",
-                "Not authenticated or missing role."
-            );
-            return res.status(error.httpStatus).json(error);
+            return res
+                .status(403)
+                .json(
+                    createError(
+                        "FORBIDDEN",
+                        "Not authenticated or missing role."
+                    )
+                );
         }
 
         if (allowedRoles.includes(req.user.role)) {
             next();
         } else {
-            const error = createErrorResponse(
-                "FORBIDDEN",
-                "You do not have the required permissions."
-            );
-            return res.status(error.httpStatus).json(error);
+            return res
+                .status(403)
+                .json(
+                    createError(
+                        "FORBIDDEN",
+                        "You do not have the required permissions."
+                    )
+                );
         }
     };
 }
