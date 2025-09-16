@@ -12,7 +12,7 @@ async function createTenantController(req, res, next) {
             tenant_id: tenant.id,
         });
     } catch (err) {
-        //res.status(500).json(createError("INTERNAL_SERVER_ERROR"));
+        res.status(500).json(createError("INTERNAL_SERVER_ERROR"));
         next(err);
     }
 }
