@@ -1,8 +1,9 @@
 const tenantServices = require("../Services/tenantServices");
 const { createError } = require("../../Error/CustomErrorHandler");
+const crypto = require("crypto");
 
 async function createTenantController(req, res, next) {
-    const { uuid } = req.body;
+    const uuid = crypto.randomUUID();
 
     try {
         const tenant = await tenantServices.createTenant(uuid);

@@ -1,8 +1,9 @@
 const express = require("express");
 const loggingMiddleware = require("./Logging/loggingMiddleware");
 const errorHandler = require("./Logging/errorLoggerMiddleware");
-const createError = require("./Error/CustomErrorHandler");
 const tenantRoutes = require("./TenantSVC/Routes/tenantRoutes");
+const authRoutes = require("./AuthSVC/Routes/authRoutes");
+require("dotenv").config();
 
 const app = express();
 app.use(express.json()); // Middleware to parse JSON request bodies
@@ -10,6 +11,7 @@ app.use(loggingMiddleware);
 
 // Mount the tenant routes under the /api/tenants base path
 app.use("/api/v1/tenants", tenantRoutes);
+app.use("/api/v1/auth", authRoutes);
 
 app.use(errorHandler);
 

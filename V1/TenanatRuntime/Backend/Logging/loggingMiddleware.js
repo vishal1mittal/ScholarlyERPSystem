@@ -1,14 +1,14 @@
 const fs = require("fs");
 const path = require("path");
+const { getUTCDateTime, getLocalDateTime } = require("../Util/dateTime");
 
 function loggingMiddleware(req, res, next) {
-    const dateStr = new Date().toISOString().slice(0, 10);
+    const dateStr = getUTCDateTime().slice(0, 10);
     const logFile = path.join(__dirname, `request_logs_${dateStr}.ndjson`);
-    const now = new Date();
 
     const requestLog = {
-        timestamp_utc: now.toISOString(),
-        timestamp_local: now.toLocaleString("en-IN", { hour12: true }),
+        timestamp_utc: getUTCDateTime(),
+        timestamp_local: getLocalDateTime(),
         request: {
             method: req.method,
             route: req.originalUrl,
