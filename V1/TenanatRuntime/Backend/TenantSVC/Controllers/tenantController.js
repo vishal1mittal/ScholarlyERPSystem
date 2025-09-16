@@ -1,19 +1,23 @@
-const tenantServices = require("../Services/tenantServices"); // Correct import path
+const tenantServices = require("../Services/tenantServices");
+const { createError } = require("../../Error/CustomErrorHandler");
 
-const createError = require("../../Error/CustomErrorHandler");
 async function createTenantController(req, res, next) {
     const { uuid } = req.body;
-    const id = uuid || uuidv4();
 
     try {
-        const tenant = await tenantServices.createTenant(id);
+        const tenant = await tenantServices.createTenant(uuid);
         res.status(201).json({
             message: "Tenant added successfully for testing.",
             tenant_id: tenant.id,
         });
     } catch (err) {
-        res.status(500).json(createError("INTERNAL_SERVER_ERROR"));
-        next(err);
+        next(
+            createError(
+                "NOT_ACCEPTABLE",
+                "User ID Invalid or Already Exists",
+                err
+            )
+        );
     }
 }
 

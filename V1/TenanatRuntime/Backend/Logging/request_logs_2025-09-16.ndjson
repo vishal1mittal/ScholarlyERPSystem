@@ -1,33 +1,21 @@
 {
-  "timestamp_utc": "2025-09-16T06:54:16.377Z",
-  "timestamp_local": "16/9/2025, 12:24:16 pm",
+  "timestamp_utc": "2025-09-16T10:06:17.271Z",
+  "timestamp_local": "16/9/2025, 3:36:17 pm",
   "request": {
     "method": "POST",
     "route": "/api/v1/tenants/test-insert-tenant",
     "body": {
-      "uuid": "2db3c240-f9b7-4a89-bf12-339bfcd289f0"
+      "uuid": "d2536fd6-5275-4c67-92f2-f832b9cd0729"
     }
   },
   "response": {
-    "status": 500,
+    "status": 406,
     "body": {
-      "code": "INTERNAL_SERVER_ERROR",
-      "httpStatus": 500,
-      "message": "Internal Server Error"
-    }
-  }
-}
-{
-  "timestamp_utc": "2025-09-16T06:43:25.802Z",
-  "timestamp_local": "16/9/2025, 12:13:25 pm",
-  "request": {
-    "method": "POST",
-    "route": "/api/v1/tenants/test-insert-tenant",
-    "body": {
-      "uuid": "2db3c240-f9b7-4a89-bf12-339bfcd289f0"
+      "code": "NOT_ACCEPTABLE",
+      "httpStatus": 406,
+      "message": "User ID Invalid or Already Exists"
     }
   },
-  "response": {},
   "error": {
     "message": "duplicate key value violates unique constraint \"tenants_pkey\"",
     "stack": [
@@ -35,7 +23,83 @@
       "    at D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\pg-pool\\index.js:45:11",
       "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
       "    at async Object.createTenant (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\TenantSVC\\Services\\tenantServices.js:5:20)",
-      "    at async createTenantController (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\TenantSVC\\Controllers\\tenantController.js:9:24)"
+      "    at async createTenantController (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\TenantSVC\\Controllers\\tenantController.js:8:24)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-16T10:03:20.749Z",
+  "timestamp_local": "16/9/2025, 3:33:20 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/tenants/test-insert-tenant",
+    "body": {
+      "uuid": "d2536fd6-5275-4c67-92f2-f832b9cd0729"
+    }
+  },
+  "response": {
+    "status": 409,
+    "body": {
+      "code": "AUTH-409",
+      "httpStatus": 409,
+      "message": "Email Already Exists"
+    }
+  },
+  "error": {
+    "message": "duplicate key value violates unique constraint \"tenants_pkey\"",
+    "stack": [
+      "error: duplicate key value violates unique constraint \"tenants_pkey\"",
+      "    at D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\pg-pool\\index.js:45:11",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
+      "    at async Object.createTenant (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\TenantSVC\\Services\\tenantServices.js:5:20)",
+      "    at async createTenantController (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\TenantSVC\\Controllers\\tenantController.js:8:24)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-16T09:54:32.195Z",
+  "timestamp_local": "16/9/2025, 3:24:32 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/tenants/test-insert-tenant",
+    "body": {
+      "uuid": "d2536fd6-5275-4c67-92f2-f832b9cd0729"
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "message": "Tenant added successfully for testing.",
+      "tenant_id": "d2536fd6-5275-4c67-92f2-f832b9cd0729"
+    }
+  }
+}
+{
+  "timestamp_utc": "2025-09-16T09:54:06.513Z",
+  "timestamp_local": "16/9/2025, 3:24:06 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/tenants/test-insert-tenant",
+    "body": {
+      "uuid": "29ec9975-6666-4f6b-8c8a-7f19f93a5c7a"
+    }
+  },
+  "response": {
+    "status": 409,
+    "body": {
+      "code": "AUTH-409",
+      "httpStatus": 409,
+      "message": "Email already exists in system"
+    }
+  },
+  "error": {
+    "message": "duplicate key value violates unique constraint \"tenants_pkey\"",
+    "stack": [
+      "error: duplicate key value violates unique constraint \"tenants_pkey\"",
+      "    at D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\pg-pool\\index.js:45:11",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
+      "    at async Object.createTenant (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\TenantSVC\\Services\\tenantServices.js:5:20)",
+      "    at async createTenantController (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\TenantSVC\\Controllers\\tenantController.js:8:24)"
     ]
   }
 }

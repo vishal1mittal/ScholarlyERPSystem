@@ -1,16 +1,3 @@
-class CustomError extends Error {
-    constructor(errorCode, customMessage) {
-        const errorDetails =
-            errorMap[errorCode] || errorMap.INTERNAL_SERVER_ERROR;
-        super(customMessage || errorDetails.message);
-
-        this.httpStatus = errorDetails.httpStatus;
-        this.errorCode = errorCode;
-        this.name = this.constructor.name;
-        Error.captureStackTrace(this, this.constructor);
-    }
-}
-
 const errorMap = {
     // 1xx Informational (rarely used in APIs)
     CONTINUE: { httpStatus: 100, message: "Continue" },
@@ -119,22 +106,25 @@ const errorMap = {
     "DB-101": { httpStatus: 500, message: "Database Query Error" },
 };
 
-/**
- * Factory to create a standardized CustomError
- */
-function createError(errorCode, customMessage) {
-    return formatErrorResponse(new CustomError(errorCode, customMessage));
+class CustomError extends Error {
+    constructor(errorCode, customMessage, cause) {
+        const errorDetails =
+            errorMap[errorCode] || errorMap.INTERNAL_SERVER_ERROR;
+        super(customMessage || errorDetails.message);
+
+        this.httpStatus = errorDetails.httpStatus;
+        this.errorCode = errorCode || "INTERNAL_SERVER_ERROR";
+        this.name = this.constructor.name;
+        this.cause = cause;
+        Error.captureStackTrace(this, this.constructor);
+    }
 }
 
 /**
- * Converts error to JSON response
+ * Factory to create CustomError instances
  */
-function formatErrorResponse(err) {
-    return {
-        code: err.errorCode || "INTERNAL_SERVER_ERROR",
-        httpStatus: err.httpStatus || 500,
-        message: err.message || "Internal Server Error",
-    };
+function createError(errorCode, customMessage, cause) {
+    return new CustomError(errorCode, customMessage, cause);
 }
 
-module.exports = createError;
+module.exports = { CustomError, createError, errorMap };

@@ -45,7 +45,9 @@ function loggingMiddleware(req, res, next) {
 
     // 🔹 Write once, after response (or error) finishes
     res.on("finish", () => {
-        saveLog(logFile, requestLog);
+        if (!req._hasError) {
+            saveLog(logFile, requestLog);
+        }
     });
 
     next();
