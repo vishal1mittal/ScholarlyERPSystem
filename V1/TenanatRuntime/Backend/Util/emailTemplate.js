@@ -24,11 +24,11 @@ function otpEmailTemplate({ name, otp }) {
                     <tr>
                       <td align="left" style="display:flex;align-items:center;">
                         <img src="https://drive.usercontent.google.com/download?id=1C7rV6VXtdKo7HxrGXDPfDOgnY0UNR9hj&export=download&authuser=0" 
-                            alt="StockSense" height="40" style="display:inline-block;vertical-align:middle;" />
+                            alt="Scholarly ERP" height="40" style="display:inline-block;vertical-align:middle;" />
                       </td>
                       
                       <span align="left" style="color:#ffffff;font-size:18px;font-weight:bold;vertical-align:middle;">
-                        StockSense
+                        Scholarly ERP
                       </span>
 
                       <td align="right" style="color:#ffffff;font-size:14px;">
@@ -72,14 +72,14 @@ function otpEmailTemplate({ name, otp }) {
                           support@vishalhq.in
                         </a> 
                         or visit our 
-                        <a href="https://stocksense.vishalhq.in/help" style="color:#499fb6;text-decoration:none;" target="_blank">
+                        <a href="https://scholarly.vishalhq.in/help" style="color:#499fb6;text-decoration:none;" target="_blank">
                           Help Center
                         </a>.
                       </td>
                     </tr>
                     <tr>
                       <td style="padding-top:15px;font-size:14px;color:#434343;">
-                        © ${new Date().getFullYear()} StockSense. All rights reserved.
+                        © ${new Date().getFullYear()} Scholarly ERP. All rights reserved.
                       </td>
                     </tr>
                   </table>

@@ -10,9 +10,7 @@ async function createSession(client, userId) {
     const sessionId = crypto.randomUUID();
     const opaqueToken = crypto.randomUUID();
     const refreshHash = await passwordsUtil.hashPassword(opaqueToken); // Hash an opaque token
-    const expiresAt = new Date(
-        Date.now() + 7 * 24 * 60 * 60 * 1000
-    ).toISOString(); // 7-day lifetime
+    const expiresAt = getUTCDateTime(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7-day lifetime
 
     const query = `
         INSERT INTO sessions (id, user_id, tenant_id, refresh_token_hash, created_at, updated_at, expires_at)

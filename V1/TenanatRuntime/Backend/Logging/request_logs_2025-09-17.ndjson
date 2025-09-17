@@ -1,4 +1,604 @@
 {
+  "timestamp_utc": "2025-09-17T20:17:32.725Z",
+  "timestamp_local": "18/9/2025, 1:47:32 am",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/2fa/setup",
+    "body": {
+      "userId": "9d32c8e5-5022-40d3-874f-cb811b42d41f",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "qr_code_url": "otpauth://totp/Scholarly%20(vishalmittalrohini%40gmail.com)?secret=LV3EUWRGIVXE2P32EMXSKVSCIVBGIW3G",
+      "secret": "LV3EUWRGIVXE2P32EMXSKVSCIVBGIW3G"
+    }
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T20:17:29.224Z",
+  "timestamp_local": "18/9/2025, 1:47:29 am",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/2fa/setup",
+    "body": {
+      "userId": "9d32c8e5-5022-40d3-874f-cb811b42d41f",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "qr_code_url": "otpauth://totp/Scholarly%20(vishalmittalrohini%40gmail.com)?secret=EQ2DOPTMINCECRCTEVTU6VCWNYQVU2BV",
+      "secret": "EQ2DOPTMINCECRCTEVTU6VCWNYQVU2BV"
+    }
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T20:17:14.776Z",
+  "timestamp_local": "18/9/2025, 1:47:14 am",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/2fa/setup",
+    "body": {
+      "userId": "9d32c8e5-5022-40d3-874f-cb811b42d41f"
+    }
+  },
+  "response": {
+    "status": 400,
+    "body": {
+      "code": "BAD_REQUEST",
+      "httpStatus": 400,
+      "message": "Password is Invalid"
+    }
+  },
+  "error": {
+    "message": "Invalid Password: undefined",
+    "stack": [
+      "Error: Invalid Password: undefined",
+      "    at setup2FA (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Controllers\\authController.js:279:17)",
+      "    at Layer.handleRequest (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\lib\\layer.js:152:17)",
+      "    at next (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\lib\\route.js:157:13)",
+      "    at Route.dispatch (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\lib\\route.js:117:3)",
+      "    at handle (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\index.js:435:11)",
+      "    at Layer.handleRequest (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\lib\\layer.js:152:17)",
+      "    at D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\index.js:295:15",
+      "    at processParams (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\index.js:582:12)",
+      "    at next (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\index.js:291:5)",
+      "    at Function.handle (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\index.js:186:3)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T20:04:52.156Z",
+  "timestamp_local": "18/9/2025, 1:34:52 am",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/2fa/verify",
+    "body": {
+      "userId": "9d32c8e5-5022-40d3-874f-cb811b42d41f",
+      "otp": "837369"
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "success": false
+    }
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T19:52:06.098Z",
+  "timestamp_local": "18/9/2025, 1:22:06 am",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/2fa/setup",
+    "body": {
+      "userId": "9d32c8e5-5022-40d3-874f-cb811b42d41f"
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "qr_code_url": "otpauth://totp/Scholarly%20(vishalmittalrohini%40gmail.com)?secret=EN3TE6J7HRTDG5R2JNHGC7KWHZHTMWBV",
+      "secret": "EN3TE6J7HRTDG5R2JNHGC7KWHZHTMWBV"
+    }
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T19:51:10.005Z",
+  "timestamp_local": "18/9/2025, 1:21:10 am",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/2fa/disable",
+    "body": {
+      "userId": "9d32c8e5-5022-40d3-874f-cb811b42d41f",
+      "otp": "874503"
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "message": "2FA disabled successfully."
+    }
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T19:50:42.136Z",
+  "timestamp_local": "18/9/2025, 1:20:42 am",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/2fa/enable",
+    "body": {
+      "userId": "9d32c8e5-5022-40d3-874f-cb811b42d41f",
+      "otp": "591509"
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "message": "2FA enabled successfully."
+    }
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T19:50:04.761Z",
+  "timestamp_local": "18/9/2025, 1:20:04 am",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/2fa/verify",
+    "body": {
+      "userId": "9d32c8e5-5022-40d3-874f-cb811b42d41f",
+      "otp": "809948"
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "success": true
+    }
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T19:36:52.959Z",
+  "timestamp_local": "18/9/2025, 1:06:52 am",
+  "request": {
+    "method": "GET",
+    "route": "//totp/Scholarly%20(vishalmittalrohini%40gmail.com)?secret=MZTDSXS2PNTE66BYGNREEKRSIZHDGUSJ"
+  },
+  "response": {}
+}
+{
+  "timestamp_utc": "2025-09-17T19:36:46.414Z",
+  "timestamp_local": "18/9/2025, 1:06:46 am",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/2fa/setup",
+    "body": {
+      "userId": "9d32c8e5-5022-40d3-874f-cb811b42d41f"
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "qr_code_url": "otpauth://totp/Scholarly%20(vishalmittalrohini%40gmail.com)?secret=MZTDSXS2PNTE66BYGNREEKRSIZHDGUSJ",
+      "secret": "MZTDSXS2PNTE66BYGNREEKRSIZHDGUSJ"
+    }
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T19:36:20.477Z",
+  "timestamp_local": "18/9/2025, 1:06:20 am",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/2fa/setup",
+    "body": {
+      "userId": "9d32c8e5-5022-40d3-874f-cb811b42d41f"
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {}
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T19:35:45.167Z",
+  "timestamp_local": "18/9/2025, 1:05:45 am",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/2fa/setup",
+    "body": {
+      "userId": "9d32c8e5-5022-40d3-874f-cb811b42d41f"
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {}
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T19:32:19.272Z",
+  "timestamp_local": "18/9/2025, 1:02:19 am",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/2fa/setup",
+    "body": {
+      "userId": "9d32c8e5-5022-40d3-874f-cb811b42d41f"
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {}
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T17:54:59.159Z",
+  "timestamp_local": "17/9/2025, 11:24:59 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/verify-mail",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "otp": "553828"
+    }
+  },
+  "response": {
+    "status": 400,
+    "body": {
+      "code": "BAD_REQUEST",
+      "httpStatus": 400,
+      "message": "Invalid or expired OTP"
+    }
+  },
+  "error": {
+    "message": "Invalid or expired OTP",
+    "stack": [
+      "CustomError: Invalid or expired OTP",
+      "    at createError (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\Error\\CustomErrorHandler.js:127:12)",
+      "    at Object.verifyMail (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Services\\authService.js:93:19)",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
+      "    at async verifyMail (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Controllers\\authController.js:98:34)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T17:54:53.196Z",
+  "timestamp_local": "17/9/2025, 11:24:53 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/verify-mail",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "otp": "553838"
+    }
+  },
+  "response": {
+    "status": 400,
+    "body": {
+      "code": "BAD_REQUEST",
+      "httpStatus": 400,
+      "message": "Invalid or expired OTP"
+    }
+  },
+  "error": {
+    "message": "Invalid or expired OTP",
+    "stack": [
+      "CustomError: Invalid or expired OTP",
+      "    at createError (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\Error\\CustomErrorHandler.js:127:12)",
+      "    at Object.verifyMail (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Services\\authService.js:93:19)",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
+      "    at async verifyMail (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Controllers\\authController.js:98:34)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T17:54:44.269Z",
+  "timestamp_local": "17/9/2025, 11:24:44 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/verify-mail",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "otp": "553828"
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "user_id": "9d32c8e5-5022-40d3-874f-cb811b42d41f",
+      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI5ZDMyYzhlNS01MDIyLTQwZDMtODc0Zi1jYjgxMWI0MmQ0MWYiLCJ0ZW5hbnRJZCI6ImQ4ZGQ4ZmFhLWE3ZTgtNGE1MS05YzBmLTk0ZmZjMzUwYjlhNyIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzU4MTMxNjg0LCJleHAiOjE3NTgxMzE5ODR9.Kun0z25wqrVnTp3iFmu5JXKZMG0xFvohNNVUSWiW_Wo",
+      "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIxOGUyNGZmMy0yYThjLTQzNTYtYjI5MS00MDQ0OTZlN2MyMDkiLCJpYXQiOjE3NTgxMzE2ODQsImV4cCI6MTc1ODczNjQ4NH0.8zKE5xUZvW7MrXnNhwxI6Y6O5oCeD-shhVKuHnAyaPc",
+      "opaque_token": "6cfaedfc-b715-49b6-bec2-62c2150eb466",
+      "session_id": "18e24ff3-2a8c-4356-b291-404496e7c209"
+    }
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T17:54:27.192Z",
+  "timestamp_local": "17/9/2025, 11:24:27 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/resend-otp",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com"
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "message": "New OTP sent"
+    }
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T17:54:15.840Z",
+  "timestamp_local": "17/9/2025, 11:24:15 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "message": "User registered, check your email for OTP"
+    }
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T17:53:29.093Z",
+  "timestamp_local": "17/9/2025, 11:23:29 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/resend-otp",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com"
+    }
+  },
+  "response": {
+    "status": 400,
+    "body": {
+      "code": "BAD_REQUEST",
+      "httpStatus": 400,
+      "message": "Email is already verified"
+    }
+  },
+  "error": {
+    "message": "Email is already verified",
+    "stack": [
+      "CustomError: Email is already verified",
+      "    at createError (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\Error\\CustomErrorHandler.js:127:12)",
+      "    at Object.resendOtp (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Services\\authService.js:171:19)",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
+      "    at async resendOtp (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Controllers\\authController.js:137:37)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T17:53:22.568Z",
+  "timestamp_local": "17/9/2025, 11:23:22 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/verify-mail",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "otp": "253976"
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "user_id": "ae53f68d-39d8-4bbb-a205-880c95f3921f",
+      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhZTUzZjY4ZC0zOWQ4LTRiYmItYTIwNS04ODBjOTVmMzkyMWYiLCJ0ZW5hbnRJZCI6ImQ4ZGQ4ZmFhLWE3ZTgtNGE1MS05YzBmLTk0ZmZjMzUwYjlhNyIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzU4MTMxNjAzLCJleHAiOjE3NTgxMzE5MDN9.j0BpTF7X_KON-iAShoWfpHCHyxq3KD2M5ix6QMQdr00",
+      "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIzMjg2NWIzMS0yNDNjLTRjYmYtOTRiNy0yNDc4MWUwYzQwNDIiLCJpYXQiOjE3NTgxMzE2MDMsImV4cCI6MTc1ODczNjQwM30.Zl2jtrJLFvAueTYICiVfR53dN5RhmzNTMQbcdTH8Gr4",
+      "opaque_token": "eb15e846-2a28-42dd-a57f-2df2fd50a0d8",
+      "session_id": "32865b31-243c-4cbf-94b7-24781e0c4042"
+    }
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T17:53:04.499Z",
+  "timestamp_local": "17/9/2025, 11:23:04 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "message": "User registered, check your email for OTP"
+    }
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T17:52:52.356Z",
+  "timestamp_local": "17/9/2025, 11:22:52 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/resend-otp",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com"
+    }
+  },
+  "response": {
+    "status": 404,
+    "body": {
+      "code": "NOT_FOUND",
+      "httpStatus": 404,
+      "message": "User not found"
+    }
+  },
+  "error": {
+    "message": "User not found",
+    "stack": [
+      "CustomError: User not found",
+      "    at createError (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\Error\\CustomErrorHandler.js:127:12)",
+      "    at Object.resendOtp (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Services\\authService.js:179:19)",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
+      "    at async resendOtp (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Controllers\\authController.js:137:37)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T17:52:44.925Z",
+  "timestamp_local": "17/9/2025, 11:22:44 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/verify-mail",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "otp": "273072"
+    }
+  },
+  "response": {
+    "status": 400,
+    "body": {
+      "code": "BAD_REQUEST",
+      "httpStatus": 400,
+      "message": "Invalid or expired OTP"
+    }
+  },
+  "error": {
+    "message": "Invalid or expired OTP",
+    "stack": [
+      "CustomError: Invalid or expired OTP",
+      "    at createError (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\Error\\CustomErrorHandler.js:127:12)",
+      "    at Object.verifyMail (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Services\\authService.js:93:19)",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
+      "    at async verifyMail (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Controllers\\authController.js:98:34)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T17:51:23.988Z",
+  "timestamp_local": "17/9/2025, 11:21:23 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/verify-mail",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "otp": "273072"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "code": "INTERNAL_SERVER_ERROR",
+      "httpStatus": 500,
+      "message": "authService.verifyMail is not a function"
+    }
+  },
+  "error": {
+    "message": "authService.verifyMail is not a function",
+    "stack": [
+      "TypeError: authService.verifyMail is not a function",
+      "    at verifyMail (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Controllers\\authController.js:98:52)",
+      "    at Layer.handleRequest (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\lib\\layer.js:152:17)",
+      "    at next (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\lib\\route.js:157:13)",
+      "    at Route.dispatch (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\lib\\route.js:117:3)",
+      "    at handle (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\index.js:435:11)",
+      "    at Layer.handleRequest (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\lib\\layer.js:152:17)",
+      "    at D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\index.js:295:15",
+      "    at processParams (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\index.js:582:12)",
+      "    at next (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\index.js:291:5)",
+      "    at Function.handle (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\index.js:186:3)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T17:02:24.508Z",
+  "timestamp_local": "17/9/2025, 10:32:24 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "message": "User registered, check your email for OTP"
+    }
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T16:50:37.836Z",
+  "timestamp_local": "17/9/2025, 10:20:37 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "message": "User registered, check your email for OTP"
+    }
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T16:47:43.771Z",
+  "timestamp_local": "17/9/2025, 10:17:43 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "message": "User registered, check your email for OTP"
+    }
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T16:44:06.813Z",
+  "timestamp_local": "17/9/2025, 10:14:06 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "code": "INTERNAL_SERVER_ERROR",
+      "httpStatus": 500,
+      "message": "Internal server error during registration"
+    }
+  },
+  "error": {
+    "message": "null value in column \"id\" of relation \"temp_users\" violates not-null constraint",
+    "stack": [
+      "error: null value in column \"id\" of relation \"temp_users\" violates not-null constraint",
+      "    at D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\pg\\lib\\client.js:545:17",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
+      "    at async Object.registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Services\\authService.js:43:9)",
+      "    at async registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Controllers\\authController.js:45:37)"
+    ]
+  }
+}
+{
   "timestamp_utc": "2025-09-17T13:07:48.209Z",
   "timestamp_local": "17/9/2025, 6:37:48 pm",
   "request": {

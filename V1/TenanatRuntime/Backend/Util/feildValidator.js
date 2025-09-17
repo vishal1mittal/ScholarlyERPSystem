@@ -33,6 +33,11 @@ function isValidISODate(date) {
     return !isNaN(parsedDate.getTime());
 }
 
+function isValidOTP(otp, length = 6) {
+    const regex = new RegExp(`^\\d{${length}}$`);
+    return regex.test(otp);
+}
+
 module.exports = {
     isValidEmail,
     isValidPhone,
@@ -40,4 +45,5 @@ module.exports = {
     isValidUUID,
     isValidURL,
     isValidISODate,
+    isValidOTP,
 };
