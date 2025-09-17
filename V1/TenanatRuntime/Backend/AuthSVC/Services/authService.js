@@ -1,10 +1,15 @@
 const db = require("../../DB/db"); // Import our database module
 const passwordUtil = require("../../Util/password");
-const { createError } = require("../../Error/CustomErrorHandler");
+const tokensUtil = require("../../Util/tokens");
+const sessionsUtil = require("../../Util/session");
 const { getUTCDateTime } = require("../../Util/dateTime");
+const { createError } = require("../../Error/CustomErrorHandler");
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
+const otpEmailTemplate = require("../../Util/otpEmailTemplate"); // Assuming this utility exists
 
 // This function will interact with your PostgreSQL database
-async function registerUser(email, password, role) {
+async function registerUser(email, password) {
     const client = await db.pool.connect();
     try {
         await client.query("BEGIN");
@@ -13,7 +18,7 @@ async function registerUser(email, password, role) {
         const userExistsQuery = "SELECT 1 FROM users WHERE email = $1;";
         const userExistsResult = await client.query(userExistsQuery, [email]);
         if (userExistsResult.rows.length > 0) {
-            return next(createError("CONFLICT", "Email Already Exists", err));
+            throw createError("CONFLICT", "Email Already Exists");
         }
 
         // Hash the password using Argon2, as specified in the docs.
@@ -26,40 +31,43 @@ async function registerUser(email, password, role) {
             RETURNING id;
         `;
         const newUserValues = [
-            uuidv4(),
+            crypto.randomUUID(),
             process.env.TENANT_ID,
             email,
             passwordHash,
-            role,
+            process.env.LEAST_PRIVILEGE_ROLE,
             true,
             false,
             getUTCDateTime(),
             getUTCDateTime(),
         ];
         const newUserResult = await client.query(newUserQuery, newUserValues);
-        const newUserId = newUserResult.rows[0].id;
+        const newUser = newUserResult.rows[0];
+        const newUserId = newUser.id;
 
         // The documentation requires a user_id, access_token, and refresh_token in the response
         // You'll need to generate these here and return them
-        const accessToken = "..."; // logic to create JWT
-        const refreshToken = "..."; // logic to create JWT
+        let session, refreshToken, opaqueToken;
 
-        // Store a hashed version of the refresh token in the sessions table.
-        const refreshTokenHash = await hashPassword(refreshToken);
-        const newSessionQuery = `
-            INSERT INTO sessions (id, user_id, tenant_id, refresh_token_hash, created_at, updated_at, expires_at)
-            VALUES ($1, $2, $3, $4, $5, $6, $7);
-        `;
-        const newSessionValues = [
-            uuidv4(),
-            newUserId,
-            "your-tenant-id-uuid", // Must match user's tenant_id
-            refreshTokenHash,
-            new Date(),
-            new Date(),
-            new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7-day lifetime
-        ];
-        await client.query(newSessionQuery, newSessionValues);
+        try {
+            const sessionData = await sessionsUtil.createSession(
+                client,
+                newUserId
+            );
+            // Assign values to the variables declared outside
+            session = sessionData.session;
+            refreshToken = sessionData.refreshToken;
+            opaqueToken = sessionData.opaqueToken;
+        } catch (err) {
+            // Return an error response if session creation fails
+            throw createError(
+                "INTERNAL_SERVER_ERROR",
+                "Error Creating Session",
+                err
+            );
+        }
+
+        const accessToken = tokensUtil.generateAccessToken(newUser); // logic to create JWT
 
         await client.query("COMMIT");
 
@@ -67,10 +75,12 @@ async function registerUser(email, password, role) {
             user_id: newUserId,
             access_token: accessToken,
             refresh_token: refreshToken,
+            opaque_token: opaqueToken,
+            session_id: session.id,
         };
-    } catch (error) {
+    } catch (err) {
         await client.query("ROLLBACK");
-        throw error;
+        throw err;
     } finally {
         client.release();
     }
@@ -79,7 +89,7 @@ async function loginUser() {}
 async function enable2FA() {}
 async function disable2FA() {}
 async function setup2FA() {}
-async function verify2FA() {}
+async function refresh2FABackupCodes() {}
 async function getMe() {}
 
 module.exports = {
@@ -88,6 +98,6 @@ module.exports = {
     enable2FA,
     disable2FA,
     setup2FA,
-    verify2FA,
+    refresh2FABackupCodes,
     getMe,
 };

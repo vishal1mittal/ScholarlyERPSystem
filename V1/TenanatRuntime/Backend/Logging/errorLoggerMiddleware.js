@@ -33,8 +33,12 @@ const errorHandler = (err, req, res, next) => {
                 body: responseBody,
             },
             error: {
-                message: err.cause.message,
-                stack: err.cause.stack ? err.cause.stack.split("\n") : [],
+                message: err.cause?.message || err.message, // Use optional chaining to check for `cause`, then fall back to `err.message`
+                stack: err.cause?.stack
+                    ? err.cause.stack.split("\n")
+                    : err.stack
+                    ? err.stack.split("\n")
+                    : [],
             },
         };
 
@@ -51,7 +55,7 @@ const errorHandler = (err, req, res, next) => {
         res.status(statusCode).json(responseBody);
     } catch (handlerErr) {
         // 🚨 If error handler itself fails, at least respond to client
-        console.error("⚠️ Unhandled error inside errorHandler:", handlerErr);
+        console.log("⚠️ Unhandled error inside errorHandler:", handlerErr);
         logEntry = {
             code: "LOGGER_FAILURE",
             httpStatus: 500,
@@ -59,6 +63,7 @@ const errorHandler = (err, req, res, next) => {
         };
         res.status(500).json(logEntry);
         saveLog(logFile, logEntry);
+        saveLog(logFile, handlerErr);
     }
 };
 

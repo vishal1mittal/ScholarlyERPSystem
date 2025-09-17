@@ -1,12 +1,15 @@
-const { v4: uuidv4 } = require("uuid");
+const crypto = require("crypto");
 const db = require("../DB/db");
 const argon2 = require("argon2");
-const { getUTCDateTime } = require("../../Util/dateTime");
-const tokens = require("./tokens");
+const { getUTCDateTime } = require("../Util/dateTime");
+const tokensUtil = require("./tokens");
+const passwordsUtil = require("./password");
+const { createError } = require("../Error/CustomErrorHandler");
 
-async function createSession(userId, tenantId) {
-    const sessionId = uuidv4();
-    const refreshHash = await argon2.hash(uuidv4()); // Hash an opaque token
+async function createSession(client, userId) {
+    const sessionId = crypto.randomUUID();
+    const opaqueToken = crypto.randomUUID();
+    const refreshHash = await passwordsUtil.hashPassword(opaqueToken); // Hash an opaque token
     const expiresAt = new Date(
         Date.now() + 7 * 24 * 60 * 60 * 1000
     ).toISOString(); // 7-day lifetime
@@ -19,20 +22,21 @@ async function createSession(userId, tenantId) {
     const values = [
         sessionId,
         userId,
-        tenantId,
+        process.env.TENANT_ID,
         refreshHash,
         getUTCDateTime(),
         expiresAt,
     ];
 
     try {
-        const result = await db.query(query, values);
+        const result = await client.query(query, values);
         return {
             session: result.rows[0],
-            refreshToken: tokens.generateRefreshToken(sessionId),
+            refreshToken: tokensUtil.generateRefreshToken(sessionId),
+            opaqueToken: opaqueToken,
         };
     } catch (error) {
-        return next("INTERNAL_SERVER_ERROR", "Error Creating Session", error);
+        throw new Error(error);
     }
 }
 
@@ -43,7 +47,10 @@ async function verifySession(sessionId, opaqueToken) {
 
     if (!session) return null;
 
-    const ok = await argon2.verify(session.refresh_token_hash, opaqueToken);
+    const ok = await passwordsUtil.verifyPassword(
+        session.refresh_token_hash,
+        opaqueToken
+    );
 
     if (!ok) return null;
 

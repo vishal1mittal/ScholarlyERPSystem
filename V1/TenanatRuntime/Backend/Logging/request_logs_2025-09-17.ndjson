@@ -1,0 +1,711 @@
+{
+  "timestamp_utc": "2025-09-17T13:07:48.209Z",
+  "timestamp_local": "17/9/2025, 6:37:48 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "user_id": "64bb982d-c0f4-4464-82f0-04f934e00b7f",
+      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGJiOTgyZC1jMGY0LTQ0NjQtODJmMC0wNGY5MzRlMDBiN2YiLCJpYXQiOjE3NTgxMTQ0NjgsImV4cCI6MTc1ODExNDc2OH0.JcHudsxCxyb_XPWzNKruvO5XDD4klYWh816Ln3OJB70",
+      "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiJkMGMxMTgwYy1iYzM0LTRkOGUtOWUyNC1jZDA2ZDIwNjEzMjgiLCJpYXQiOjE3NTgxMTQ0NjgsImV4cCI6MTc1ODcxOTI2OH0.H14Hu_ps4z4Vb--3i2RkSdAe67D7Q6FJkPzNOOglfKs",
+      "opaque_token": "f4c90b89-4105-4ad0-a674-1d159b3a32b4",
+      "session_id": "d0c1180c-bc34-4d8e-9e24-cd06d2061328"
+    }
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T13:07:31.857Z",
+  "timestamp_local": "17/9/2025, 6:37:31 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobile"
+    }
+  },
+  "response": {
+    "status": 400,
+    "body": {
+      "code": "BAD_REQUEST",
+      "httpStatus": 400,
+      "message": "Password is Invalid"
+    }
+  },
+  "error": {
+    "message": "Invalid Password: mobile",
+    "stack": [
+      "Error: Invalid Password: mobile",
+      "    at registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Controllers\\authController.js:38:17)",
+      "    at Layer.handleRequest (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\lib\\layer.js:152:17)",
+      "    at next (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\lib\\route.js:157:13)",
+      "    at Route.dispatch (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\lib\\route.js:117:3)",
+      "    at handle (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\index.js:435:11)",
+      "    at Layer.handleRequest (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\lib\\layer.js:152:17)",
+      "    at D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\index.js:295:15",
+      "    at processParams (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\index.js:582:12)",
+      "    at next (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\index.js:291:5)",
+      "    at Function.handle (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\index.js:186:3)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T13:07:09.176Z",
+  "timestamp_local": "17/9/2025, 6:37:09 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "user_id": "16594525-7307-4f32-ba0a-288b091be625",
+      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxNjU5NDUyNS03MzA3LTRmMzItYmEwYS0yODhiMDkxYmU2MjUiLCJpYXQiOjE3NTgxMTQ0MjksImV4cCI6MTc1ODExNDcyOX0.tMdPREBABzoju-ZIaffjnxX4GMBIF1reItLmHjF2OrI",
+      "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiJmOTgyYTM3NC02MTVkLTRiZmUtYjc5MC01MzYyNDY4NTNjN2MiLCJpYXQiOjE3NTgxMTQ0MjksImV4cCI6MTc1ODcxOTIyOX0.FzH1GNBRsinaNhztSolHfzH7MjoI3tYPR9g9w5tCFts",
+      "opaque_token": "40c32354-725a-461b-8de8-017b33df9b0a",
+      "session_id": "f982a374-615d-4bfe-b790-536246853c7c"
+    }
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T13:06:57.725Z",
+  "timestamp_local": "17/9/2025, 6:36:57 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohinigmailcm",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 400,
+    "body": {
+      "code": "BAD_REQUEST",
+      "httpStatus": 400,
+      "message": "Email is Invalid"
+    }
+  },
+  "error": {
+    "message": "Email is Invalid: vishalmittalrohinigmailcm",
+    "stack": [
+      "Error: Email is Invalid: vishalmittalrohinigmailcm",
+      "    at registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Controllers\\authController.js:27:17)",
+      "    at Layer.handleRequest (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\lib\\layer.js:152:17)",
+      "    at next (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\lib\\route.js:157:13)",
+      "    at Route.dispatch (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\lib\\route.js:117:3)",
+      "    at handle (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\index.js:435:11)",
+      "    at Layer.handleRequest (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\lib\\layer.js:152:17)",
+      "    at D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\index.js:295:15",
+      "    at processParams (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\index.js:582:12)",
+      "    at next (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\index.js:291:5)",
+      "    at Function.handle (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\index.js:186:3)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T12:21:51.543Z",
+  "timestamp_local": "17/9/2025, 5:51:51 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohinigmailcm",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "user_id": "540a7d7e-bf70-44f4-aff4-807764713989",
+      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1NDBhN2Q3ZS1iZjcwLTQ0ZjQtYWZmNC04MDc3NjQ3MTM5ODkiLCJpYXQiOjE3NTgxMTE3MTIsImV4cCI6MTc1ODExMjAxMn0.ZTJKS46p15nRFZHENavqz2Hs5cajEXwGIBYR_l6y3bA",
+      "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiJmMjg4YTUwZS0xNDJkLTQ5YjEtOGZjNy0xZjRhMzgwZjBkMDIiLCJpYXQiOjE3NTgxMTE3MTIsImV4cCI6MTc1ODcxNjUxMn0.-LKOUych2mHhsiycs1gDtF7K2NgPC0OaiZTBlBMEzZ4",
+      "opaque_token": "f9de94f6-96d4-4129-a400-7012d2cd091a",
+      "session_id": "f288a50e-142d-49b1-8fc7-1f4a380f0d02"
+    }
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T12:21:39.866Z",
+  "timestamp_local": "17/9/2025, 5:51:39 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.cm",
+      "password": ""
+    }
+  },
+  "response": {
+    "status": 400,
+    "body": {
+      "code": "BAD_REQUEST",
+      "httpStatus": 400,
+      "message": "Email and Password are required"
+    }
+  },
+  "error": {
+    "message": "Email or Password Doesn't Exist",
+    "stack": [
+      "Error: Email or Password Doesn't Exist",
+      "    at registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Controllers\\authController.js:15:17)",
+      "    at Layer.handleRequest (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\lib\\layer.js:152:17)",
+      "    at next (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\lib\\route.js:157:13)",
+      "    at Route.dispatch (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\lib\\route.js:117:3)",
+      "    at handle (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\index.js:435:11)",
+      "    at Layer.handleRequest (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\lib\\layer.js:152:17)",
+      "    at D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\index.js:295:15",
+      "    at processParams (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\index.js:582:12)",
+      "    at next (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\index.js:291:5)",
+      "    at Function.handle (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\node_modules\\router\\index.js:186:3)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T12:21:21.917Z",
+  "timestamp_local": "17/9/2025, 5:51:21 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 409,
+    "body": {
+      "code": "CONFLICT",
+      "httpStatus": 409,
+      "message": "Email Already Exists"
+    }
+  },
+  "error": {
+    "message": "Email Already Exists",
+    "stack": [
+      "CustomError: Email Already Exists",
+      "    at createError (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\Error\\CustomErrorHandler.js:127:12)",
+      "    at Object.registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Services\\authService.js:19:19)",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
+      "    at async registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Controllers\\authController.js:22:34)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T12:20:37.967Z",
+  "timestamp_local": "17/9/2025, 5:50:37 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "code": "INTERNAL_SERVER_ERROR",
+      "httpStatus": 500,
+      "message": "Error Creating User"
+    }
+  },
+  "error": {
+    "message": "Email Already Exists",
+    "stack": [
+      "CustomError: Email Already Exists",
+      "    at createError (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\Error\\CustomErrorHandler.js:127:12)",
+      "    at Object.registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Services\\authService.js:19:19)",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
+      "    at async registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Controllers\\authController.js:22:34)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T12:11:26.002Z",
+  "timestamp_local": "17/9/2025, 5:41:26 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "code": "Email Already Exists",
+      "httpStatus": 500,
+      "message": "Internal Server Error"
+    }
+  },
+  "error": {
+    "message": "Email Already Exists",
+    "stack": [
+      "Error: Email Already Exists",
+      "    at Object.registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Services\\authService.js:19:19)",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
+      "    at async registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Controllers\\authController.js:22:34)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T12:09:47.610Z",
+  "timestamp_local": "17/9/2025, 5:39:47 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "code": "INTERNAL_SERVER_ERROR",
+      "httpStatus": 500,
+      "message": "Internal Server Error"
+    }
+  },
+  "error": {
+    "message": "Email Already Exists",
+    "stack": [
+      "Error: Email Already Exists",
+      "    at Object.registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Services\\authService.js:19:19)",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
+      "    at async registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Controllers\\authController.js:22:34)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T12:08:37.063Z",
+  "timestamp_local": "17/9/2025, 5:38:37 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "code": "INTERNAL_SERVER_ERROR",
+      "httpStatus": 500,
+      "message": "Internal Server Error"
+    }
+  },
+  "error": {
+    "message": "CustomError: Email Already Exists",
+    "stack": [
+      "Error: CustomError: Email Already Exists",
+      "    at Object.registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Services\\authService.js:19:19)",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
+      "    at async registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Controllers\\authController.js:22:34)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T12:07:25.790Z",
+  "timestamp_local": "17/9/2025, 5:37:25 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "code": "INTERNAL_SERVER_ERROR",
+      "httpStatus": 500,
+      "message": "Internal Server Error"
+    }
+  },
+  "error": {
+    "message": "err is not defined",
+    "stack": [
+      "ReferenceError: err is not defined",
+      "    at Object.registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Services\\authService.js:19:29)",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
+      "    at async registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Controllers\\authController.js:22:34)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T12:06:44.922Z",
+  "timestamp_local": "17/9/2025, 5:36:44 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "code": "INTERNAL_SERVER_ERROR",
+      "httpStatus": 500,
+      "message": "Internal Server Error"
+    }
+  },
+  "error": {
+    "message": "next is not defined",
+    "stack": [
+      "ReferenceError: next is not defined",
+      "    at Object.registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Services\\authService.js:19:13)",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
+      "    at async registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Controllers\\authController.js:22:34)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T11:00:59.764Z",
+  "timestamp_local": "17/9/2025, 4:30:59 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 201,
+    "body": {
+      "user_id": "f624ec40-429f-46c1-805d-2c8bb9854ad6",
+      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJmNjI0ZWM0MC00MjlmLTQ2YzEtODA1ZC0yYzhiYjk4NTRhZDYiLCJpYXQiOjE3NTgxMDY4NjAsImV4cCI6MTc1ODEwNzE2MH0.xcsXegW09862B4YhpGbQaU2_cKpSdqvF83nJcNU8Ry8",
+      "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiI2YmQ5ZDk5OS1iZjY4LTRlNTgtYmE5NS1iOWMxNDI3ZTNhN2QiLCJpYXQiOjE3NTgxMDY4NjAsImV4cCI6MTc1ODcxMTY2MH0.dTuL3_Zio51hjua0CzbnH9VzQYBD1RB6WAprwc-IS90",
+      "opaque_token": "5ef90528-1e3a-4c96-abbf-33cb4bf05771",
+      "session_id": "6bd9d999-bf68-4e58-ba95-b9c1427e3a7d"
+    }
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T10:58:06.954Z",
+  "timestamp_local": "17/9/2025, 4:28:06 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "code": "INTERNAL_SERVER_ERROR",
+      "httpStatus": 500,
+      "message": "Internal Server Error"
+    }
+  },
+  "error": {
+    "message": "Error: error: null value in column \"tenant_id\" of relation \"sessions\" violates not-null constraint",
+    "stack": [
+      "Error: Error: error: null value in column \"tenant_id\" of relation \"sessions\" violates not-null constraint",
+      "    at Object.registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Services\\authService.js:68:19)",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
+      "    at async registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Controllers\\authController.js:22:34)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T10:56:36.984Z",
+  "timestamp_local": "17/9/2025, 4:26:36 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "code": "INTERNAL_SERVER_ERROR",
+      "httpStatus": 500,
+      "message": "Internal Server Error"
+    }
+  },
+  "error": {
+    "message": "Error: error: null value in column \"tenant_id\" of relation \"sessions\" violates not-null constraint",
+    "stack": [
+      "Error: Error: error: null value in column \"tenant_id\" of relation \"sessions\" violates not-null constraint",
+      "    at Object.registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Services\\authService.js:66:19)",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
+      "    at async registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Controllers\\authController.js:22:34)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T10:54:56.024Z",
+  "timestamp_local": "17/9/2025, 4:24:56 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "code": "INTERNAL_SERVER_ERROR",
+      "httpStatus": 500,
+      "message": "Internal Server Error"
+    }
+  },
+  "error": {
+    "message": "Error: error: null value in column \"tenant_id\" of relation \"sessions\" violates not-null constraint",
+    "stack": [
+      "Error: Error: error: null value in column \"tenant_id\" of relation \"sessions\" violates not-null constraint",
+      "    at Object.registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Services\\authService.js:63:19)",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
+      "    at async registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Controllers\\authController.js:22:34)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T10:53:56.527Z",
+  "timestamp_local": "17/9/2025, 4:23:56 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "code": "INTERNAL_SERVER_ERROR",
+      "httpStatus": 500,
+      "message": "Internal Server Error"
+    }
+  },
+  "error": {
+    "message": "Error: error: null value in column \"tenant_id\" of relation \"sessions\" violates not-null constraint",
+    "stack": [
+      "Error: Error: error: null value in column \"tenant_id\" of relation \"sessions\" violates not-null constraint",
+      "    at Object.registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Services\\authService.js:62:19)",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)",
+      "    at async registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Controllers\\authController.js:22:34)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T10:52:45.794Z",
+  "timestamp_local": "17/9/2025, 4:22:45 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "code": "INTERNAL_SERVER_ERROR",
+      "httpStatus": 500,
+      "message": "Internal Server Error"
+    }
+  },
+  "error": {
+    "message": "uuidv4 is not defined",
+    "stack": [
+      "ReferenceError: uuidv4 is not defined",
+      "    at Object.registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Services\\authService.js:30:31)",
+      "    at async registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Controllers\\authController.js:22:34)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T10:51:59.722Z",
+  "timestamp_local": "17/9/2025, 4:21:59 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "code": "INTERNAL_SERVER_ERROR",
+      "httpStatus": 500,
+      "message": "Internal Server Error"
+    }
+  },
+  "error": {
+    "message": "Internal Server Error",
+    "stack": [
+      "CustomError: Internal Server Error",
+      "    at createError (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\Error\\CustomErrorHandler.js:127:12)",
+      "    at registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Controllers\\authController.js:33:21)",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T10:50:01.296Z",
+  "timestamp_local": "17/9/2025, 4:20:01 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "code": "INTERNAL_SERVER_ERROR",
+      "httpStatus": 500,
+      "message": "Internal Server Error"
+    }
+  },
+  "error": {
+    "message": "Internal Server Error",
+    "stack": [
+      "CustomError: Internal Server Error",
+      "    at createError (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\Error\\CustomErrorHandler.js:127:12)",
+      "    at registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Controllers\\authController.js:33:21)",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T10:49:24.736Z",
+  "timestamp_local": "17/9/2025, 4:19:24 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "code": "INTERNAL_SERVER_ERROR",
+      "httpStatus": 500,
+      "message": "Internal Server Error"
+    }
+  },
+  "error": {
+    "message": "Internal Server Error",
+    "stack": [
+      "CustomError: Internal Server Error",
+      "    at createError (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\Error\\CustomErrorHandler.js:127:12)",
+      "    at registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Controllers\\authController.js:33:21)",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T10:47:49.300Z",
+  "timestamp_local": "17/9/2025, 4:17:49 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "code": "INTERNAL_SERVER_ERROR",
+      "httpStatus": 500,
+      "message": "Internal Server Error"
+    }
+  },
+  "error": {
+    "message": "Internal Server Error",
+    "stack": [
+      "CustomError: Internal Server Error",
+      "    at createError (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\Error\\CustomErrorHandler.js:127:12)",
+      "    at registerUser (D:\\Codes\\ScholarlyERPSystem\\V1\\TenanatRuntime\\Backend\\AuthSVC\\Controllers\\authController.js:33:21)",
+      "    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"
+    ]
+  }
+}
+{
+  "timestamp_utc": "2025-09-17T10:44:39.858Z",
+  "timestamp_local": "17/9/2025, 4:14:39 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "code": "LOGGER_FAILURE",
+      "httpStatus": 500,
+      "message": "🚨Internal logging failure"
+    }
+  }
+}
+{
+  "code": "LOGGER_FAILURE",
+  "httpStatus": 500,
+  "message": "🚨Internal logging failure"
+}
+{
+  "timestamp_utc": "2025-09-17T10:43:15.568Z",
+  "timestamp_local": "17/9/2025, 4:13:15 pm",
+  "request": {
+    "method": "POST",
+    "route": "/api/v1/auth/register",
+    "body": {
+      "email": "vishalmittalrohini@gmail.com",
+      "password": "mobileA@1"
+    }
+  },
+  "response": {
+    "status": 500,
+    "body": {
+      "code": "LOGGER_FAILURE",
+      "httpStatus": 500,
+      "message": "🚨Internal logging failure"
+    }
+  }
+}
+{
+  "code": "LOGGER_FAILURE",
+  "httpStatus": 500,
+  "message": "🚨Internal logging failure"
+}
