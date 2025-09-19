@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
-const db = require("./DB/db"); // Import our database module
-const createError = require("../Error/CustomErrorHandler");
+const db = require("../DB/db"); // Import our database module
+const { createError } = require("../Error/CustomErrorHandler");
+const tokensUtil = require("../Util/tokens");
 require("dotenv").config();
 
 /**
@@ -19,27 +20,26 @@ async function authenticate(req, res, next) {
     }
 
     try {
-        const payload = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+        const payload = tokensUtil.verifyAccessToken(token);
 
         const userQuery = `
             SELECT id, email, role, mfa_enabled, is_active FROM users
             WHERE id = $1 AND tenant_id = $2
         `;
         const userResult = await db.query(userQuery, [
-            payload.id,
-            payload.tenant_id,
+            payload.userId,
+            payload.tenantId,
         ]);
         const user = userResult.rows[0];
 
         if (!user || !user.is_active) {
-            return res
-                .status(401)
-                .json(
-                    createError(
-                        "UNAUTHORIZED",
-                        "User not found or is inactive."
-                    )
-                );
+            return next(
+                createError(
+                    "UNAUTHORIZED",
+                    "User not found or is inactive.",
+                    new Error("User not found or is inactive.")
+                )
+            );
         }
 
         // The report specifies that the access token should be short-lived, so we don't need to check
@@ -47,15 +47,15 @@ async function authenticate(req, res, next) {
 
         req.user = {
             id: user.id,
-            tenantId: payload.tenant_id,
+            tenantId: payload.tenantId,
             role: user.role,
             mfa_enabled: user.mfa_enabled,
         };
         next();
     } catch (error) {
-        return res
-            .status(401)
-            .json(createError("UNAUTHORIZED", "Invalid or expired token."));
+        return next(
+            createError("UNAUTHORIZED", "Invalid or expired token.", error)
+        );
     }
 }
 
@@ -66,27 +66,25 @@ async function authenticate(req, res, next) {
 function authorize(...allowedRoles) {
     return (req, res, next) => {
         if (!req.user || !req.user.role) {
-            return res
-                .status(403)
-                .json(
-                    createError(
-                        "FORBIDDEN",
-                        "Not authenticated or missing role."
-                    )
-                );
+            return next(
+                createError(
+                    "FORBIDDEN",
+                    "Not authenticated or missing role.",
+                    new Error("Not authenticated or missing role.")
+                )
+            );
         }
 
         if (allowedRoles.includes(req.user.role)) {
             next();
         } else {
-            return res
-                .status(403)
-                .json(
-                    createError(
-                        "FORBIDDEN",
-                        "You do not have the required permissions."
-                    )
-                );
+            return next(
+                createError(
+                    "FORBIDDEN",
+                    "You do not have the required permissions.",
+                    new Error("You do not have the required permissions.")
+                )
+            );
         }
     };
 }

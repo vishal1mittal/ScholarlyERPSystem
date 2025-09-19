@@ -56,6 +56,7 @@ async function registerUser(req, res, next) {
         return next(err);
     }
 }
+
 async function verifyMail(req, res, next) {
     // 1. Input Validation
     const { email, otp } = req.body;
@@ -106,6 +107,7 @@ async function verifyMail(req, res, next) {
         return next(err);
     }
 }
+
 async function resendOtp(req, res, next) {
     // 1. Input Validation
     const { email } = req.body;
@@ -145,10 +147,14 @@ async function resendOtp(req, res, next) {
         return next(err);
     }
 }
+
 async function loginUser(req, res, next) {}
 
+async function refreshAccessToken(refreshToken, opaqueToken) {}
+
 async function setup2FA(req, res, next) {
-    const { userId, password } = req.body;
+    const userId = req.user.id;
+    const { password } = req.body;
 
     // 1. Input Validation
     if (!userId) {
@@ -196,11 +202,13 @@ async function setup2FA(req, res, next) {
         return next(err);
     }
 }
-async function verify2FA(req, res, next) {
-    const { userId, otp } = req.body;
+
+async function verifyTOTP2FA(req, res, next) {
+    const userId = req.user.id;
+    const { totp } = req.body;
 
     // 1. Input Validation
-    if (!userId || !otp) {
+    if (!userId || !totp) {
         // Use the centralized error handling module
         return next(
             createError(
@@ -222,20 +230,20 @@ async function verify2FA(req, res, next) {
         );
     }
 
-    if (!feildValidator.isValidOTP(otp)) {
+    if (!feildValidator.isValidOTP(totp)) {
         // Use the centralized error handling module
         return next(
             createError(
                 "BAD_REQUEST",
                 "TOTP is Invalid",
-                new Error(`TOTP Password: ${otp}`)
+                new Error(`TOTP Password: ${totp}`)
             )
         );
     }
 
     try {
         // 2. Call the Service Layer
-        const twoFAMessage = await authService.verify2FA(userId, otp);
+        const twoFAMessage = await authService.verifyTOTP2FA(userId, totp);
 
         // 3. Send the Response
         return res.status(201).json(twoFAMessage);
@@ -245,11 +253,67 @@ async function verify2FA(req, res, next) {
         return next(err);
     }
 }
+
+async function verifyBackupCode2FA(req, res, next) {
+    const userId = req.user.id;
+    const { backupCode } = req.body;
+
+    // 1. Input Validation
+    if (!userId || !backupCode) {
+        // Use the centralized error handling module
+        return next(
+            createError(
+                "BAD_REQUEST",
+                "User Id and Backup Code are required",
+                new Error("User Id or Backup Code Doesn't Exist")
+            )
+        );
+    }
+
+    if (!feildValidator.isValidUUID(userId)) {
+        // Use the centralized error handling module
+        return next(
+            createError(
+                "BAD_REQUEST",
+                "User Id is Invalid",
+                new Error(`User Id is Invalid: ${userId}`)
+            )
+        );
+    }
+
+    if (!feildValidator.isValidBackupCode(backupCode)) {
+        // Use the centralized error handling module
+        return next(
+            createError(
+                "BAD_REQUEST",
+                "Backup Code is Invalid",
+                new Error(`Invalid Backup Code: ${backupCode}`)
+            )
+        );
+    }
+
+    try {
+        // 2. Call the Service Layer
+        const twoFAMessage = await authService.verifyBackupCode2FA(
+            userId,
+            backupCode
+        );
+
+        // 3. Send the Response
+        return res.status(201).json(twoFAMessage);
+    } catch (err) {
+        // 4. Handle Errors from the Service Layer
+        // Pass the error to the Express error handling middleware
+        return next(err);
+    }
+}
+
 async function enable2FA(req, res, next) {
-    const { userId, otp } = req.body;
+    const userId = req.user.id;
+    const { totp } = req.body;
 
     // 1. Input Validation
-    if (!userId || !otp) {
+    if (!userId || !totp) {
         // Use the centralized error handling module
         return next(
             createError(
@@ -271,20 +335,20 @@ async function enable2FA(req, res, next) {
         );
     }
 
-    if (!feildValidator.isValidOTP(otp)) {
+    if (!feildValidator.isValidOTP(totp)) {
         // Use the centralized error handling module
         return next(
             createError(
                 "BAD_REQUEST",
                 "TOTP is Invalid",
-                new Error(`TOTP Password: ${otp}`)
+                new Error(`TOTP Password: ${totp}`)
             )
         );
     }
 
     try {
         // 2. Call the Service Layer
-        const twoFAMessage = await authService.enable2FA(userId, otp);
+        const twoFAMessage = await authService.enable2FA(userId, totp);
 
         // 3. Send the Response
         return res.status(201).json(twoFAMessage);
@@ -294,11 +358,13 @@ async function enable2FA(req, res, next) {
         return next(err);
     }
 }
+
 async function disable2FA(req, res, next) {
-    const { userId, otp } = req.body;
+    const userId = req.user.id;
+    const { totp } = req.body;
 
     // 1. Input Validation
-    if (!userId || !otp) {
+    if (!userId || !totp) {
         // Use the centralized error handling module
         return next(
             createError(
@@ -320,20 +386,20 @@ async function disable2FA(req, res, next) {
         );
     }
 
-    if (!feildValidator.isValidOTP(otp)) {
+    if (!feildValidator.isValidOTP(totp)) {
         // Use the centralized error handling module
         return next(
             createError(
                 "BAD_REQUEST",
                 "TOTP is Invalid",
-                new Error(`TOTP Password: ${otp}`)
+                new Error(`TOTP Password: ${totp}`)
             )
         );
     }
 
     try {
         // 2. Call the Service Layer
-        const twoFAMessage = await authService.disable2FA(userId, otp);
+        const twoFAMessage = await authService.disable2FA(userId, totp);
 
         // 3. Send the Response
         return res.status(201).json(twoFAMessage);
@@ -343,7 +409,96 @@ async function disable2FA(req, res, next) {
         return next(err);
     }
 }
-async function refresh2FABackupCodes(req, res, next) {}
+
+async function refresh2FABackupCodes(req, res, next) {
+    const userId = req.user.id;
+    const { password, totp, backupCode } = req.body;
+
+    // 1. Input Validation
+    if (!userId || !password) {
+        // Use the centralized error handling module
+        return next(
+            createError(
+                "BAD_REQUEST",
+                "User Id and Password are required",
+                new Error("User Id or Password Doesn't Exist")
+            )
+        );
+    }
+
+    // Check for either TOTP or Backup Code, not both
+    if ((totp && backupCode) || (!totp && !backupCode)) {
+        return next(
+            createError(
+                "BAD_REQUEST",
+                "Must provide either TOTP or a Backup Code, but not both",
+                new Error("Invalid 2FA proof provided")
+            )
+        );
+    }
+
+    if (!feildValidator.isValidUUID(userId)) {
+        // Use the centralized error handling module
+        return next(
+            createError(
+                "BAD_REQUEST",
+                "User Id is Invalid",
+                new Error(`User Id is Invalid: ${userId}`)
+            )
+        );
+    }
+
+    if (!feildValidator.isValidPassword(password)) {
+        // Use the centralized error handling module
+        return next(
+            createError(
+                "BAD_REQUEST",
+                "Password is Invalid",
+                new Error(`Invalid Password: ${password}`)
+            )
+        );
+    }
+
+    // Check for a valid TOTP or a valid backup code.
+    if (totp) {
+        if (!feildValidator.isValidOTP(totp)) {
+            return next(
+                createError(
+                    "BAD_REQUEST",
+                    "TOTP is Invalid",
+                    new Error(`TOTP Password: ${totp}`)
+                )
+            );
+        }
+    } else if (backupCode) {
+        if (!feildValidator.isValidBackupCode(backupCode)) {
+            return next(
+                createError(
+                    "BAD_REQUEST",
+                    "Backup Code is Invalid",
+                    new Error(`Backup Code: ${backupCode}`)
+                )
+            );
+        }
+    }
+
+    try {
+        // 2. Call the Service Layer
+        const twoFAMessage = await authService.refresh2FABackupCodes(
+            userId,
+            password,
+            totp,
+            backupCode
+        );
+
+        // 3. Send the Response
+        return res.status(201).json(twoFAMessage);
+    } catch (err) {
+        // 4. Handle Errors from the Service Layer
+        // Pass the error to the Express error handling middleware
+        return next(err);
+    }
+}
 async function getMe(req, res, next) {}
 
 module.exports = {
@@ -354,7 +509,8 @@ module.exports = {
     enable2FA,
     disable2FA,
     setup2FA,
-    verify2FA,
+    verifyTOTP2FA,
+    verifyBackupCode2FA,
     refresh2FABackupCodes,
     getMe,
 };

@@ -38,6 +38,12 @@ function isValidOTP(otp, length = 6) {
     return regex.test(otp);
 }
 
+function isValidBackupCode(code) {
+    const regex =
+        /^(?:[A-Za-z0-9]{8,12}|([A-Za-z0-9]{4}-){1,2}[A-Za-z0-9]{4})$/;
+    return regex.test(code);
+}
+
 module.exports = {
     isValidEmail,
     isValidPhone,
@@ -46,4 +52,5 @@ module.exports = {
     isValidURL,
     isValidISODate,
     isValidOTP,
+    isValidBackupCode,
 };

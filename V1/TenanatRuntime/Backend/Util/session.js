@@ -38,9 +38,9 @@ async function createSession(client, userId) {
     }
 }
 
-async function verifySession(sessionId, opaqueToken) {
+async function verifySession(client, sessionId, opaqueToken) {
     const query = `SELECT refresh_token_hash FROM sessions WHERE id = $1 AND expires_at > $2 AND revoked_at IS NULL`;
-    const result = await db.query(query, [sessionId, getUTCDateTime()]);
+    const result = await client.query(query, [sessionId, getUTCDateTime()]);
     const session = result.rows[0];
 
     if (!session) return null;
