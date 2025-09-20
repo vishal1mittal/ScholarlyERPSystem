@@ -148,9 +148,153 @@ async function resendOtp(req, res, next) {
     }
 }
 
-async function loginUser(req, res, next) {}
+async function loginUser(req, res, next) {
+    // 1. Input Validation
+    const { email, password, totp, backupCode } = req.body;
 
-async function refreshAccessToken(refreshToken, opaqueToken) {}
+    if (!email || !password) {
+        // Use the centralized error handling module
+        return next(
+            createError(
+                "BAD_REQUEST",
+                "Email and Password are required",
+                new Error("Email or Password Doesn't Exist")
+            )
+        );
+    }
+
+    // Check for either TOTP or Backup Code, not both
+    if ((totp && backupCode) || (!totp && !backupCode)) {
+        return next(
+            createError(
+                "BAD_REQUEST",
+                "Must provide either TOTP or a Backup Code, but not both",
+                new Error("Invalid 2FA proof provided")
+            )
+        );
+    }
+
+    if (!feildValidator.isValidEmail(email)) {
+        // Use the centralized error handling module
+        return next(
+            createError(
+                "BAD_REQUEST",
+                "Email is Invalid",
+                new Error(`Email is Invalid: ${email}`)
+            )
+        );
+    }
+
+    if (!feildValidator.isValidPassword(password)) {
+        // Use the centralized error handling module
+        return next(
+            createError(
+                "BAD_REQUEST",
+                "Password is Invalid",
+                new Error(`Invalid Password: ${password}`)
+            )
+        );
+    }
+
+    // Check for a valid TOTP or a valid backup code.
+    if (totp) {
+        if (!feildValidator.isValidOTP(totp)) {
+            return next(
+                createError(
+                    "BAD_REQUEST",
+                    "TOTP is Invalid",
+                    new Error(`TOTP Password: ${totp}`)
+                )
+            );
+        }
+    } else if (backupCode) {
+        if (!feildValidator.isValidBackupCode(backupCode)) {
+            return next(
+                createError(
+                    "BAD_REQUEST",
+                    "Backup Code is Invalid",
+                    new Error(`Backup Code: ${backupCode}`)
+                )
+            );
+        }
+    }
+
+    try {
+        // 2. Call the Service Layer
+        const registrationMessage = await authService.loginUser(
+            email,
+            password,
+            totp,
+            backupCode
+        );
+
+        // 3. Send the Response
+        // The API contract for /auth/register specifies a 201 status code
+        return res.status(201).json(registrationMessage);
+    } catch (err) {
+        // 4. Handle Errors from the Service Layer
+        // Pass the error to the Express error handling middleware
+        return next(err);
+    }
+}
+
+async function logoutUser(req, res, next) {
+    // 1. Input Validation
+    const { sessionId } = req.body;
+    if (!sessionId) {
+        // Use the centralized error handling module
+        return next(
+            createError(
+                "BAD_REQUEST",
+                "Session Id is required",
+                new Error("Session Id Doesn't Exist")
+            )
+        );
+    }
+
+    if (!feildValidator.isValidUUID(sessionId)) {
+        // Use the centralized error handling module
+        return next(
+            createError(
+                "BAD_REQUEST",
+                "Session Id is Invalid",
+                new Error(`Session Id is Invalid: ${sessionId}`)
+            )
+        );
+    }
+
+    try {
+        // 2. Call the Service Layer
+        const registrationMessage = await authService.logoutUser(sessionId);
+        // 3. Send the Response
+        // The API contract for /auth/register specifies a 201 status code
+        return res.status(201).json(registrationMessage);
+    } catch (err) {
+        // 4. Handle Errors from the Service Layer
+        // Pass the error to the Express error handling middleware
+        return next(err);
+    }
+}
+
+async function refreshAccessToken(req, res, next) {
+    const { refreshToken, opaqueToken } = req.body;
+
+    if (!refreshToken || !opaqueToken) {
+        return next(
+            createError("BAD_REQUEST", "Refresh and Opaque Tokens required")
+        );
+    }
+
+    try {
+        const tokenData = await authService.refreshAccessToken(
+            refreshToken,
+            opaqueToken
+        );
+        return res.status(200).json(tokenData);
+    } catch (err) {
+        return next(err);
+    }
+}
 
 async function setup2FA(req, res, next) {
     const userId = req.user.id;
@@ -506,6 +650,8 @@ module.exports = {
     verifyMail,
     resendOtp,
     loginUser,
+    logoutUser,
+    refreshAccessToken,
     enable2FA,
     disable2FA,
     setup2FA,

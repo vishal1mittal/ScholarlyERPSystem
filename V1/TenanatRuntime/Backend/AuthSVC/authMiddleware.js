@@ -14,9 +14,7 @@ async function authenticate(req, res, next) {
     const token = authHeader && authHeader.split(" ")[1];
 
     if (!token) {
-        return res
-            .status(401)
-            .json(createError("UNAUTHORIZED", "No token provided."));
+        return next(createError("UNAUTHORIZED", "No access token provided."));
     }
 
     try {
@@ -51,10 +49,15 @@ async function authenticate(req, res, next) {
             role: user.role,
             mfa_enabled: user.mfa_enabled,
         };
+
         next();
     } catch (error) {
         return next(
-            createError("UNAUTHORIZED", "Invalid or expired token.", error)
+            createError(
+                "UNAUTHORIZED",
+                "Invalid or expired Access token.",
+                error
+            )
         );
     }
 }

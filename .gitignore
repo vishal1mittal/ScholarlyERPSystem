@@ -45,3 +45,6 @@ __pycache__/
 
 #Backups
 Backups/
+
+# Log Files
+*.ndjson

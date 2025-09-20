@@ -142,11 +142,11 @@ async function verifyMail(email, otp) {
         await client.query("COMMIT");
 
         return {
-            user_id: newUser.id,
-            access_token: accessToken,
-            refresh_token: refreshToken,
-            opaque_token: opaqueToken,
-            session_id: session.id,
+            userId: newUser.id,
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+            opaqueToken: opaqueToken,
+            sessionId: session.id,
         };
     } catch (error) {
         await client.query("ROLLBACK");
@@ -259,7 +259,7 @@ async function loginUser(email, password, totp, backupCode) {
             password
         );
         if (!isPasswordValid) {
-            throw createError("AUTH-401", "Invalid credentials");
+            throw createError("UNAUTHORIZED", "Invalid credentials");
         }
 
         // 3. Handle 2FA if enabled
@@ -267,12 +267,17 @@ async function loginUser(email, password, totp, backupCode) {
             let is2FAValid = false;
 
             if (totp) {
-                const totpVerificationResult = await verify2FA(user.id, totp);
+                const totpVerificationResult = await verifyTOTP2FA(
+                    user.id,
+                    totp
+                );
                 is2FAValid = totpVerificationResult.success;
             } else if (backupCode) {
                 // If a backup code is provided, we use the specific function that invalidates it after use.
-                const backupCodeVerificationResult =
-                    await verifyAndInvalidateBackupCode(user.id, backupCode);
+                const backupCodeVerificationResult = await verifyBackupCode2FA(
+                    user.id,
+                    backupCode
+                );
                 is2FAValid = backupCodeVerificationResult.success;
             }
 
@@ -283,12 +288,13 @@ async function loginUser(email, password, totp, backupCode) {
 
         // 4. Create a new session and generate tokens
         const { session, refreshToken, opaqueToken } =
-            await sessionsUtil.createSession(user.id, user.tenant_id);
+            await sessionsUtil.createSession(client, user.id);
         const accessToken = tokensUtil.generateAccessToken(user);
 
         await client.query("COMMIT");
 
         return {
+            userId: user.id,
             accessToken,
             refreshToken,
             opaqueToken,
@@ -300,6 +306,40 @@ async function loginUser(email, password, totp, backupCode) {
         throw createError(
             "INTERNAL_SERVER_ERROR",
             "Internal server error during login",
+            error
+        );
+    } finally {
+        client.release();
+    }
+}
+
+async function logoutUser(sessionId) {
+    const client = await db.pool.connect();
+    try {
+        await client.query("BEGIN");
+
+        // Use the utility function to revoke the session
+        const revokedSession = await sessionsUtil.revokeSession(
+            client,
+            sessionId,
+            "logout"
+        );
+
+        if (!revokedSession) {
+            // If the session is not found or already revoked, treat it as a success for security reasons
+            await client.query("ROLLBACK"); // Or commit an empty transaction.
+            return { message: "Logged out" };
+        }
+
+        await client.query("COMMIT");
+
+        return { message: "Logged out" };
+    } catch (error) {
+        await client.query("ROLLBACK");
+        if (error.custom_code) throw error;
+        throw createError(
+            "INTERNAL_SERVER_ERROR",
+            "Internal server error during logout",
             error
         );
     } finally {
@@ -326,13 +366,14 @@ async function refreshAccessToken(refreshToken, opaqueToken) {
             decoded.sid,
             opaqueToken
         );
+
         if (!session) {
             throw createError("UNAUTHORIZED", "Session invalid");
         }
 
         // 3. Fetch the user associated with the session.
         const userQuery = `
-            SELECT id, email, role, mfa_enabled, is_active FROM users
+            SELECT id, tenant_id, email, role, mfa_enabled, is_active FROM users
             WHERE id = $1 AND tenant_id = $2
         `;
         const userResult = await client.query(userQuery, [
@@ -340,6 +381,7 @@ async function refreshAccessToken(refreshToken, opaqueToken) {
             session.tenant_id,
         ]);
         const user = userResult.rows[0];
+
         if (!user || !user.is_active) {
             throw createError("UNAUTHORIZED", "User not found or is inactive");
         }
@@ -421,6 +463,7 @@ async function enable2FA(userId, totp) {
         client.release();
     }
 }
+
 async function disable2FA(userId, totp) {
     const client = await db.pool.connect();
     const tenantId = process.env.TENANT_ID;
@@ -471,15 +514,17 @@ async function disable2FA(userId, totp) {
         client.release();
     }
 }
+
 async function setup2FA(userId, password) {
     const client = await db.pool.connect();
+    const tenantId = process.env.TENANT_ID;
     try {
         await client.query("BEGIN"); // Start a transaction
 
         // 1. Fetch user to get their email and check if 2FA is already enabled.
         const userQuery =
-            "SELECT email, password_hash, mfa_enabled FROM users WHERE id = $1";
-        const userResult = await client.query(userQuery, [userId]);
+            "SELECT email, password_hash, mfa_enabled FROM users WHERE id = $1 AND tenant_id = $2";
+        const userResult = await client.query(userQuery, [userId, tenantId]);
         const user = userResult.rows[0];
 
         if (!user) {
@@ -504,8 +549,8 @@ async function setup2FA(userId, password) {
 
         // 3. Update the user's record with the new secret.
         const updateQuery =
-            "UPDATE users SET mfa_secret = $1 WHERE id = $2 RETURNING mfa_secret;";
-        await client.query(updateQuery, [base32, userId]);
+            "UPDATE users SET mfa_secret = $1 WHERE id = $2 AND tenant_id = $3 RETURNING mfa_secret;";
+        await client.query(updateQuery, [base32, userId, tenantId]);
 
         await client.query("COMMIT"); // End the transaction
 
@@ -528,12 +573,14 @@ async function setup2FA(userId, password) {
 
 async function verifyTOTP2FA(userId, totp) {
     const client = await db.pool.connect();
+    const tenantId = process.env.TENANT_ID;
     try {
         // No transaction needed, as this is a read-only operation.
 
         // 1. Fetch the user's mfa_secret
-        const userQuery = "SELECT mfa_secret FROM users WHERE id = $1";
-        const userResult = await client.query(userQuery, [userId]);
+        const userQuery =
+            "SELECT mfa_secret FROM users WHERE id = $1 AND tenant_id = $2";
+        const userResult = await client.query(userQuery, [userId, tenantId]);
         const user = userResult.rows[0];
 
         if (!user || !user.mfa_secret) {
@@ -564,12 +611,13 @@ async function verifyTOTP2FA(userId, totp) {
 
 async function verifyBackupCode2FA(userId, backupCode) {
     const client = await db.pool.connect();
+    const tenantId = process.env.TENANT_ID;
     try {
         await client.query("BEGIN");
 
         // 1. Fetch user's hashed backup codes
-        const userQuery = `SELECT mfa_backup_codes_hash FROM users WHERE id = $1;`;
-        const userResult = await client.query(userQuery, [userId]);
+        const userQuery = `SELECT mfa_backup_codes_hash FROM users WHERE id = $1 AND tenant_id = $2;`;
+        const userResult = await client.query(userQuery, [userId, tenantId]);
         const user = userResult.rows[0];
 
         if (!user || user.mfa_backup_codes_hash.length === 0) {
@@ -596,10 +644,7 @@ async function verifyBackupCode2FA(userId, backupCode) {
 
         if (!isMatch) {
             await client.query("ROLLBACK");
-            return {
-                success: false,
-                codesRemaining: user.mfa_backup_codes_hash.length,
-            };
+            throw createError("BAD_REQUEST", "Invalid Backup Codes");
         }
 
         // 3. Invalidate the backup code by removing it from the array
@@ -609,10 +654,15 @@ async function verifyBackupCode2FA(userId, backupCode) {
         const updateQuery = `
             UPDATE users
             SET mfa_backup_codes_hash = $1, updated_at = $2
-            WHERE id = $3
+            WHERE id = $3 AND tenant_id = $4
             RETURNING mfa_backup_codes_hash;
         `;
-        const updateValues = [newBackupCodes, getUTCDateTime(), userId];
+        const updateValues = [
+            newBackupCodes,
+            getUTCDateTime(),
+            userId,
+            tenantId,
+        ];
         const updatedUserResult = await client.query(updateQuery, updateValues);
 
         await client.query("COMMIT");
@@ -635,12 +685,13 @@ async function verifyBackupCode2FA(userId, backupCode) {
 
 async function refresh2FABackupCodes(userId, password, totp, backupCode) {
     const client = await db.pool.connect();
+    const tenantId = process.env.TENANT_ID;
     try {
         await client.query("BEGIN");
 
         // 1. Fetch user data
-        const userQuery = `SELECT password_hash, mfa_enabled, mfa_backup_codes_hash FROM users WHERE id = $1;`;
-        const userResult = await client.query(userQuery, [userId]);
+        const userQuery = `SELECT password_hash, mfa_enabled, mfa_backup_codes_hash FROM users WHERE id = $1 AND tenant_id = $2;`;
+        const userResult = await client.query(userQuery, [userId, tenantId]);
         const user = userResult.rows[0];
 
         if (!user) {
@@ -665,7 +716,6 @@ async function refresh2FABackupCodes(userId, password, totp, backupCode) {
             // Assume verifyTOTP is a service function that fetches the mfa_secret and validates the totp code
             const totpVerificationResult = await verifyTOTP2FA(userId, totp);
             is2FAValid = totpVerificationResult.success;
-            console.log(is2FAValid);
         } else if (backupCode) {
             // Assume verifyBackupCode is a function that checks the provided backup code against the hashes
             is2FAValid = await twofaUtil.verifyBackupCode(
@@ -685,9 +735,9 @@ async function refresh2FABackupCodes(userId, password, totp, backupCode) {
         const updateQuery = `
             UPDATE users
             SET mfa_backup_codes_hash = $1, updated_at = $2
-            WHERE id = $3;
+            WHERE id = $3 AND tenant_id = $4;
         `;
-        const updateValues = [hashes, getUTCDateTime(), userId];
+        const updateValues = [hashes, getUTCDateTime(), userId, tenantId];
         await client.query(updateQuery, updateValues);
 
         await client.query("COMMIT");
@@ -715,6 +765,8 @@ module.exports = {
     verifyMail,
     resendOtp,
     loginUser,
+    logoutUser,
+    refreshAccessToken,
     enable2FA,
     disable2FA,
     setup2FA,
