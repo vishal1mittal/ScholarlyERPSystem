@@ -8,6 +8,7 @@ const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const { otpEmailTemplate } = require("../../Util/emailTemplate"); // Assuming this utility exists
 const twofaUtil = require("../../Util/twoFA");
+const rolesUtil = require("../../Util/roles");
 
 // This function will interact with your PostgreSQL database
 
@@ -758,7 +759,111 @@ async function refresh2FABackupCodes(userId, password, totp, backupCode) {
         client.release();
     }
 }
-async function getMe() {}
+
+async function getProfile(userId) {
+    const client = await db.pool.connect();
+    const tenantId = process.env.TENANT_ID;
+    try {
+        // Fetch user data from the users table.
+        const userQuery = `
+            SELECT id, email, role, mfa_enabled FROM users
+            WHERE id = $1 AND tenant_id = $2 AND is_active = TRUE;
+        `;
+        const userResult = await client.query(userQuery, [userId, tenantId]);
+        const user = userResult.rows[0];
+
+        if (!user) {
+            throw createError("NOT_FOUND", "User not found or is inactive");
+        }
+
+        // Fetch profile data from the user_profiles table.
+        const profileQuery = `
+            SELECT profile_data FROM user_profiles
+            WHERE user_id = $1 AND tenant_id = $2;
+        `;
+        const profileResult = await client.query(profileQuery, [
+            userId,
+            tenantId,
+        ]);
+        const profile = profileResult.rows[0];
+
+        // Combine user and profile data.
+        return {
+            user_id: user.id,
+            email: user.email,
+            role: user.role,
+            mfa_enabled: user.mfa_enabled,
+            profile_data: profile ? profile.profile_data : {},
+        };
+    } catch (error) {
+        if (error.errorCode) throw error;
+        throw createError(
+            "INTERNAL_SERVER_ERROR",
+            "Internal server error while fetching user profile",
+            error
+        );
+    } finally {
+        client.release();
+    }
+}
+
+async function updateUserRole(targetUserId, newRole) {
+    const client = await db.pool.connect();
+    const tenantId = process.env.TENANT_ID;
+    try {
+        await client.query("BEGIN");
+
+        const VALID_ROLES = await rolesUtil.getValidRoles();
+
+        // 1. Validate that the new role is a valid role
+        if (!VALID_ROLES.includes(newRole)) {
+            throw createError("BAD_REQUEST", "Invalid role specified");
+        }
+
+        // 2. Check if the user exists
+        const userExistsQuery =
+            "SELECT id FROM users WHERE id = $1 AND tenant_id = $2;";
+        const userExistsResult = await client.query(userExistsQuery, [
+            targetUserId,
+            tenantId,
+        ]);
+        const userExists = userExistsResult.rows.length > 0;
+
+        if (!userExists) {
+            throw createError("NOT_FOUND", "User not found");
+        }
+
+        // 3. Update the user's role
+        const updateQuery = `
+            UPDATE users
+            SET role = $1, updated_at = $2
+            WHERE id = $3 AND tenant_id = $4
+        `;
+        const updateValues = [
+            newRole,
+            getUTCDateTime(),
+            targetUserId,
+            tenantId,
+        ];
+        await client.query(updateQuery, updateValues);
+
+        await client.query("COMMIT");
+
+        return {
+            message: `User role for ${targetUserId} updated to ${newRole}`,
+        };
+    } catch (error) {
+        await client.query("ROLLBACK");
+        if (error.errorCode) throw error;
+        throw createError(
+            "INTERNAL_SERVER_ERROR",
+            "Internal server error while updating user role",
+            error
+        );
+    } finally {
+        client.release();
+    }
+}
 
 module.exports = {
     registerUser,
@@ -773,5 +878,6 @@ module.exports = {
     verifyTOTP2FA,
     verifyBackupCode2FA,
     refresh2FABackupCodes,
-    getMe,
+    updateUserRole,
+    getProfile,
 };

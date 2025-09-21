@@ -9,7 +9,8 @@ router.post("/resend-otp", authController.resendOtp);
 router.post("/login", authController.loginUser);
 router.post("/logout", authenticate, authController.logoutUser);
 router.post("/refresh-access-token", authController.refreshAccessToken);
-// router.post("/me", authController);
+router.post("/update-role", authenticate, authController.updateUserRole);
+router.post("/profile", authenticate, authController.getProfile);
 router.post("/2fa/setup", authenticate, authController.setup2FA);
 router.post("/2fa/verify-totp", authenticate, authController.verifyTOTP2FA);
 router.post(

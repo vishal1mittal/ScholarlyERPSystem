@@ -96,11 +96,11 @@ async function verifyMail(req, res, next) {
 
     try {
         // 2. Call the Service Layer
-        const registrationData = await authService.verifyMail(email, otp);
+        const verificationMessage = await authService.verifyMail(email, otp);
 
         // 3. Send the Response
         // The API contract for /auth/register specifies a 201 status code
-        return res.status(201).json(registrationData);
+        return res.status(201).json(verificationMessage);
     } catch (err) {
         // 4. Handle Errors from the Service Layer
         // Pass the error to the Express error handling middleware
@@ -136,11 +136,11 @@ async function resendOtp(req, res, next) {
 
     try {
         // 2. Call the Service Layer
-        const registrationMessage = await authService.resendOtp(email);
+        const otpMessage = await authService.resendOtp(email);
 
         // 3. Send the Response
         // The API contract for /auth/register specifies a 201 status code
-        return res.status(201).json(registrationMessage);
+        return res.status(201).json(otpMessage);
     } catch (err) {
         // 4. Handle Errors from the Service Layer
         // Pass the error to the Express error handling middleware
@@ -221,7 +221,7 @@ async function loginUser(req, res, next) {
 
     try {
         // 2. Call the Service Layer
-        const registrationMessage = await authService.loginUser(
+        const loginMessage = await authService.loginUser(
             email,
             password,
             totp,
@@ -230,7 +230,7 @@ async function loginUser(req, res, next) {
 
         // 3. Send the Response
         // The API contract for /auth/register specifies a 201 status code
-        return res.status(201).json(registrationMessage);
+        return res.status(201).json(loginMessage);
     } catch (err) {
         // 4. Handle Errors from the Service Layer
         // Pass the error to the Express error handling middleware
@@ -265,10 +265,10 @@ async function logoutUser(req, res, next) {
 
     try {
         // 2. Call the Service Layer
-        const registrationMessage = await authService.logoutUser(sessionId);
+        const logoutMessage = await authService.logoutUser(sessionId);
         // 3. Send the Response
         // The API contract for /auth/register specifies a 201 status code
-        return res.status(201).json(registrationMessage);
+        return res.status(201).json(logoutMessage);
     } catch (err) {
         // 4. Handle Errors from the Service Layer
         // Pass the error to the Express error handling middleware
@@ -643,7 +643,121 @@ async function refresh2FABackupCodes(req, res, next) {
         return next(err);
     }
 }
-async function getMe(req, res, next) {}
+
+async function updateUserRole(req, res, next) {
+    const userId = req.user.id;
+    const { targetUserId, newRole } = req.body;
+
+    // 1. Input Validation
+    if (!newRole) {
+        // Use the centralized error handling module
+        return next(
+            createError(
+                "BAD_REQUEST",
+                "Role is required",
+                new Error("Role Doesn't Exist")
+            )
+        );
+    }
+
+    if (!userId) {
+        // Use the centralized error handling module
+        return next(
+            createError(
+                "BAD_REQUEST",
+                "User Id is required",
+                new Error("User Id Doesn't Exist")
+            )
+        );
+    }
+
+    if (!targetUserId) {
+        // Use the centralized error handling module
+        return next(
+            createError(
+                "BAD_REQUEST",
+                "Target User Id is required",
+                new Error("Target User Id Doesn't Exist")
+            )
+        );
+    }
+
+    if (!feildValidator.isValidUUID(userId)) {
+        // Use the centralized error handling module
+        return next(
+            createError(
+                "BAD_REQUEST",
+                "User Id is Invalid",
+                new Error(`User Id is Invalid: ${userId}`)
+            )
+        );
+    }
+
+    if (!feildValidator.isValidUUID(targetUserId)) {
+        // Use the centralized error handling module
+        return next(
+            createError(
+                "BAD_REQUEST",
+                "Target User Id is Invalid",
+                new Error(`Target User Id is Invalid: ${userId}`)
+            )
+        );
+    }
+
+    try {
+        // 2. Call the Service Layer
+        const updateRoleMessage = await authService.updateUserRole(
+            targetUserId,
+            newRole
+        );
+
+        // 3. Send the Response
+        return res.status(201).json(updateRoleMessage);
+    } catch (err) {
+        // 4. Handle Errors from the Service Layer
+        // Pass the error to the Express error handling middleware
+        return next(err);
+    }
+}
+
+async function getProfile(req, res, next) {
+    const userId = req.user.id;
+
+    // 1. Input Validation
+    if (!userId) {
+        // Use the centralized error handling module
+        return next(
+            createError(
+                "BAD_REQUEST",
+                "User Id is required",
+                new Error("User Id Doesn't Exist")
+            )
+        );
+    }
+
+    if (!feildValidator.isValidUUID(userId)) {
+        // Use the centralized error handling module
+        return next(
+            createError(
+                "BAD_REQUEST",
+                "User Id is Invalid",
+                new Error(`User Id is Invalid: ${userId}`)
+            )
+        );
+    }
+
+    try {
+        // 2. Call the Service Layer
+        const profileMessage = await authService.getProfile(userId);
+
+        // 3. Send the Response
+        return res.status(201).json(profileMessage);
+    } catch (err) {
+        // 4. Handle Errors from the Service Layer
+        // Pass the error to the Express error handling middleware
+        return next(err);
+    }
+}
 
 module.exports = {
     registerUser,
@@ -658,5 +772,6 @@ module.exports = {
     verifyTOTP2FA,
     verifyBackupCode2FA,
     refresh2FABackupCodes,
-    getMe,
+    updateUserRole,
+    getProfile,
 };
