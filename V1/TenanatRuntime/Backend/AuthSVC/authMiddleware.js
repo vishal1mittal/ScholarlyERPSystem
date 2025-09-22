@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const db = require("../DB/db"); // Import our database module
 const { createError } = require("../Error/CustomErrorHandler");
 const tokensUtil = require("../Util/tokens");
+const rolesUtil = require("../Util/roles");
 require("dotenv").config();
 
 /**
@@ -19,10 +20,12 @@ async function authenticate(req, res, next) {
 
     try {
         const payload = tokensUtil.verifyAccessToken(token);
-
         const userQuery = `
-            SELECT id, email, role, mfa_enabled, is_active FROM users
-            WHERE id = $1 AND tenant_id = $2
+            SELECT
+                u.id, u.email, r.name AS role, u.mfa_enabled, u.is_active
+            FROM users u
+            JOIN roles r ON u.role_id = r.id
+            WHERE u.id = $1 AND u.tenant_id = $2;
         `;
         const userResult = await db.query(userQuery, [
             payload.userId,
@@ -66,26 +69,46 @@ async function authenticate(req, res, next) {
  * Middleware to authorize a user based on their role.
  * It checks if the authenticated user's role is included in the list of allowed roles.
  */
-function authorize(...allowedRoles) {
-    return (req, res, next) => {
-        if (!req.user || !req.user.role) {
+function authorize(requiredPermission) {
+    return async (req, res, next) => {
+        if (!req.user) {
             return next(
                 createError(
-                    "FORBIDDEN",
+                    "UNAUTHORIZED",
                     "Not authenticated or missing role.",
                     new Error("Not authenticated or missing role.")
                 )
             );
         }
 
-        if (allowedRoles.includes(req.user.role)) {
+        const userId = req.user.id;
+        const tenantId = req.user.tenantId;
+
+        try {
+            const userPermissions = await rolesUtil.getUserPermissions(
+                userId,
+                tenantId
+            );
+
+            // console.log(userPermissions, requiredPermission);
+
+            if (!userPermissions.has(requiredPermission)) {
+                return next(
+                    createError(
+                        "FORBIDDEN",
+                        "You do not have the required permissions.",
+                        new Error("You do not have the required permissions.")
+                    )
+                );
+            }
+
             next();
-        } else {
+        } catch (error) {
             return next(
                 createError(
-                    "FORBIDDEN",
-                    "You do not have the required permissions.",
-                    new Error("You do not have the required permissions.")
+                    "INTERNAL_SERVER_ERROR",
+                    "Error during authorization check.",
+                    error
                 )
             );
         }

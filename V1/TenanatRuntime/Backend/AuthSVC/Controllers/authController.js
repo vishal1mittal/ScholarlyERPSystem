@@ -1,7 +1,7 @@
-const { authenticate, authorize } = require("../Services/authService");
 const { createError } = require("../../Error/CustomErrorHandler");
 const authService = require("../Services/authService");
 const feildValidator = require("../../Util/feildValidator");
+const rolesUtil = require("../../Util/roles");
 
 async function registerUser(req, res, next) {
     // 1. Input Validation
@@ -700,6 +700,23 @@ async function updateUserRole(req, res, next) {
                 "BAD_REQUEST",
                 "Target User Id is Invalid",
                 new Error(`Target User Id is Invalid: ${userId}`)
+            )
+        );
+    }
+
+    const validRoles = await rolesUtil.getValidRoles();
+    if (!validRoles[newRole]) {
+        return next(createError("BAD_REQUEST", "Invalid new role specified."));
+    }
+
+    // The dynamic permission check happens here.
+    const hasPermission = await rolesUtil.checkRoleUpdatePermissions(userId, newRole);
+
+    if (!hasPermission) {
+        return next(
+            createError(
+                "FORBIDDEN",
+                "You do not have permission to assign this role."
             )
         );
     }

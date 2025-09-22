@@ -110,16 +110,18 @@ async function verifyMail(email, otp) {
 
         // 3. Create the permanent user record
         const newUserQuery = `
-            INSERT INTO users (id, tenant_id, email, password_hash, role, is_active, mfa_enabled, created_at, updated_at)
+            INSERT INTO users (id, tenant_id, email, password_hash, role_id, is_active, mfa_enabled, created_at, updated_at)
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $8)
-            RETURNING id, tenant_id, email, role;
+            RETURNING id, tenant_id, email, (SELECT name FROM roles WHERE id = $5) AS role;
         `;
+        const leastPrivilegedRole = await rolesUtil.getLeastPrivilegedRole();
+
         const newUserValues = [
             crypto.randomUUID(),
             tenantId,
             tempUser.email,
             tempUser.password_hash,
-            process.env.LEAST_PRIVILEGE_ROLE,
+            leastPrivilegedRole.id,
             true,
             false,
             getUTCDateTime(),
@@ -245,8 +247,13 @@ async function loginUser(email, password, totp, backupCode) {
         await client.query("BEGIN");
 
         // 1. Find the user by email
-        const userQuery =
-            "SELECT id, tenant_id, email, password_hash, role, mfa_enabled, is_active FROM users WHERE email = $1 AND tenant_id = $2;";
+        const userQuery = `
+            SELECT
+                u.id, u.tenant_id, u.email, u.password_hash, u.mfa_enabled, u.is_active, r.name as role
+            FROM users u
+            JOIN roles r ON u.role_id = r.id
+            WHERE u.email = $1 AND u.tenant_id = $2;
+        `;
         const userResult = await client.query(userQuery, [email, tenantId]);
         const user = userResult.rows[0];
 
@@ -374,8 +381,16 @@ async function refreshAccessToken(refreshToken, opaqueToken) {
 
         // 3. Fetch the user associated with the session.
         const userQuery = `
-            SELECT id, tenant_id, email, role, mfa_enabled, is_active FROM users
-            WHERE id = $1 AND tenant_id = $2
+            SELECT
+                u.id,
+                u.tenant_id,
+                u.email,
+                r.name AS role,
+                u.mfa_enabled,
+                u.is_active
+            FROM users u
+            JOIN roles r ON u.role_id = r.id
+            WHERE u.id = $1 AND u.tenant_id = $2;
         `;
         const userResult = await client.query(userQuery, [
             session.user_id,
@@ -766,8 +781,11 @@ async function getProfile(userId) {
     try {
         // Fetch user data from the users table.
         const userQuery = `
-            SELECT id, email, role, mfa_enabled FROM users
-            WHERE id = $1 AND tenant_id = $2 AND is_active = TRUE;
+            SELECT
+                u.id, u.email, r.name AS role, u.mfa_enabled
+            FROM users u
+            JOIN roles r ON u.role_id = r.id
+            WHERE u.id = $1 AND u.tenant_id = $2 AND u.is_active = TRUE;
         `;
         const userResult = await client.query(userQuery, [userId, tenantId]);
         const user = userResult.rows[0];
@@ -816,7 +834,8 @@ async function updateUserRole(targetUserId, newRole) {
         const VALID_ROLES = await rolesUtil.getValidRoles();
 
         // 1. Validate that the new role is a valid role
-        if (!VALID_ROLES.includes(newRole)) {
+        const newRoleId = VALID_ROLES[newRole];
+        if (!newRoleId) {
             throw createError("BAD_REQUEST", "Invalid role specified");
         }
 
@@ -836,21 +855,24 @@ async function updateUserRole(targetUserId, newRole) {
         // 3. Update the user's role
         const updateQuery = `
             UPDATE users
-            SET role = $1, updated_at = $2
+            SET role_id = $1, updated_at = $2
             WHERE id = $3 AND tenant_id = $4
+            RETURNING email;
         `;
         const updateValues = [
-            newRole,
+            newRoleId, // Use the role ID directly from the VALID_ROLES object
             getUTCDateTime(),
             targetUserId,
             tenantId,
         ];
-        await client.query(updateQuery, updateValues);
+        const updatedUserResult = await client.query(updateQuery, updateValues);
+
+        const updatedUserEmail = updatedUserResult.rows[0].email;
 
         await client.query("COMMIT");
 
         return {
-            message: `User role for ${targetUserId} updated to ${newRole}`,
+            message: `User role for ${updatedUserEmail} updated to ${newRole}`,
         };
     } catch (error) {
         await client.query("ROLLBACK");
