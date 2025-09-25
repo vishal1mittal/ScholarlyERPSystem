@@ -163,17 +163,6 @@ async function loginUser(req, res, next) {
         );
     }
 
-    // Check for either TOTP or Backup Code, not both
-    if ((totp && backupCode) || (!totp && !backupCode)) {
-        return next(
-            createError(
-                "BAD_REQUEST",
-                "Must provide either TOTP or a Backup Code, but not both",
-                new Error("Invalid 2FA proof provided")
-            )
-        );
-    }
-
     if (!feildValidator.isValidEmail(email)) {
         // Use the centralized error handling module
         return next(
@@ -710,7 +699,10 @@ async function updateUserRole(req, res, next) {
     }
 
     // The dynamic permission check happens here.
-    const hasPermission = await rolesUtil.checkRoleUpdatePermissions(userId, newRole);
+    const hasPermission = await rolesUtil.checkRoleUpdatePermissions(
+        userId,
+        newRole
+    );
 
     if (!hasPermission) {
         return next(

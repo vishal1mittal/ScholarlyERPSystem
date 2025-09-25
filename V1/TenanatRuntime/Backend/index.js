@@ -3,11 +3,15 @@ const loggingMiddleware = require("./Logging/loggingMiddleware");
 const errorHandler = require("./Logging/errorLoggerMiddleware");
 const tenantRoutes = require("./TenantSVC/Routes/tenantRoutes");
 const authRoutes = require("./AuthSVC/Routes/authRoutes");
+const { swaggerUi, swaggerSpec } = require("./swagger"); // add this
+
 require("dotenv").config();
 
 const app = express();
 app.use(express.json()); // Middleware to parse JSON request bodies
 app.use(loggingMiddleware);
+// Swagger route
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Mount the tenant routes under the /api/tenants base path
 app.use("/api/v1/tenants", tenantRoutes);
@@ -19,4 +23,5 @@ app.listen(process.env.SERVER_PORT || 3001, () => {
     console.log(
         `Server running on http://localhost:${process.env.SERVER_PORT || 3001}`
     );
+    console.log("Swagger docs at http://localhost:3001/api-docs");
 });
