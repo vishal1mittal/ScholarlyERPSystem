@@ -3,11 +3,11 @@ const loggingMiddleware = require("./Logging/loggingMiddleware");
 const errorHandler = require("./Logging/errorLoggerMiddleware");
 const authRoutes = require("./AuthSVC/Routes/authRoutes");
 const tenantRoutes = require("./TenantSVC/Routes/tenantRoutes");
-const studentRoutes = require("./TenantSVC/Routes/studentRoutes");
-const facultyRoutes = require("./TenantSVC/Routes/facultyRoutes");
-const placementRoutes = require("./TenantSVC/Routes/placementRoutes");
-const eventRoutes = require("./TenantSVC/Routes/eventRoutes");
-const libraryRoutes = require("./TenantSVC/Routes/libraryRoutes");
+const studentRoutes = require("./StudentSVC/Routes/studentRoutes");
+const facultyRoutes = require("./FacultySVC/Routes/facultyRoutes");
+const placementRoutes = require("./PlacementsSVC/Routes/placementRoutes");
+const eventRoutes = require("./EventSVC/Routes/eventRoutes");
+const libraryRoutes = require("./LibrarySVC/Routes/libraryRoutes");
 const { swaggerUi, swaggerSpec } = require("./swagger"); // add this
 
 require("dotenv").config();

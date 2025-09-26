@@ -197,7 +197,8 @@ async function checkRoleSpecificPermission(
     userId,
     targetUserId,
     targetRoleName,
-    permissionPrefix
+    permissionPrefix,
+    isRoleSuffixRequired = true
 ) {
     const client = await db.pool.connect();
     const tenantId = process.env.TENANT_ID;
@@ -242,7 +243,9 @@ async function checkRoleSpecificPermission(
         //    - Otherwise, use the 'targetUserRole' (e.g., for deletion).
         const roleToCheck = targetRoleName || targetUserRole;
 
-        const permissionName = `${permissionPrefix}_${roleToCheck.toLowerCase()}`;
+        const permissionName = `${permissionPrefix}${
+            isRoleSuffixRequired ? "_" + roleToCheck.toLowerCase() : ""
+        }`;
 
         // 4. Check if the acting user's role has the specific permission
         const permissionQuery = `
