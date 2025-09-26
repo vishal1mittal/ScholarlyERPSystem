@@ -775,7 +775,7 @@ async function refresh2FABackupCodes(userId, password, totp, backupCode) {
     }
 }
 
-async function getProfile(userId) {
+async function getProfile(userId, targetUserId) {
     const client = await db.pool.connect();
     const tenantId = process.env.TENANT_ID;
     try {
@@ -887,6 +887,115 @@ async function updateUserRole(targetUserId, newRole) {
     }
 }
 
+async function deleteUser(targetUserId, userId, password, totp, backupCode) {
+    const client = await db.pool.connect();
+    const tenantId = process.env.TENANT_ID;
+    const isSelfDeletion = targetUserId === userId;
+
+    try {
+        await client.query("BEGIN");
+
+        // 1. Fetch user data for the user being DELETED (Target User)
+        const userQuery = `
+            SELECT email, password_hash, mfa_enabled, mfa_secret, mfa_backup_codes_hash
+            FROM users 
+            WHERE id = $1 AND tenant_id = $2;
+        `;
+        const userResult = await client.query(userQuery, [
+            targetUserId,
+            tenantId,
+        ]);
+        const user = userResult.rows[0];
+
+        if (!user) {
+            throw createError("NOT_FOUND", "Target user record not found.");
+        }
+
+        // --- SECURITY CHECK (ONLY FOR SELF-DELETION) ---
+        if (isSelfDeletion) {
+            // Self-Deletion requires password AND (2FA if enabled) of the target user.
+            if (!password) {
+                throw createError(
+                    "BAD_REQUEST",
+                    "Password is required for deletion."
+                );
+            }
+            // 2. Verify password
+            const isPasswordValid = await passwordUtil.verifyPassword(
+                user.password_hash,
+                password
+            );
+
+            if (!isPasswordValid) {
+                throw createError("UNAUTHORIZED", "Invalid password.");
+            }
+
+            // 3. Verify 2FA (if enabled)
+            if (user.mfa_enabled) {
+                let is2FAValid = false;
+
+                if (totp) {
+                    is2FAValid = twofaUtil.verifyTOTP(user.mfa_secret, totp);
+                } else if (backupCode) {
+                    // Verify and invalidate the backup code
+                    const backupCodeVerificationResult =
+                        await twofaUtil.verifyBackupCode(
+                            backupCode,
+                            user.mfa_backup_codes_hash
+                        );
+                    is2FAValid = backupCodeVerificationResult.success;
+                }
+
+                if (!is2FAValid) {
+                    throw createError(
+                        "UNAUTHORIZED",
+                        "2FA proof required or invalid."
+                    );
+                }
+            } else if (totp || backupCode) {
+                throw createError(
+                    "BAD_REQUEST",
+                    "2FA is not enabled for this account."
+                );
+            }
+        }
+        // If it's ADMIN deletion, we skip steps 2 & 3 as the admin's own JWT auth is the proof.
+
+        // 4. Delete user-related records
+        // a. Delete all user sessions (using targetUserId)
+        const deleteSessionsQuery = `DELETE FROM sessions WHERE user_id = $1 AND tenant_id = $2;`;
+        await client.query(deleteSessionsQuery, [targetUserId, tenantId]);
+
+        // b. Delete any pending temp_users records (using target user's email)
+        const deleteTempQuery = `DELETE FROM temp_users WHERE email = $1 AND tenant_id = $2;`;
+        await client.query(deleteTempQuery, [user.email, tenantId]);
+
+        // c. Delete the user record itself
+        const deleteUserQuery = `DELETE FROM users WHERE id = $1 AND tenant_id = $2 RETURNING email;`;
+        const deleteResult = await client.query(deleteUserQuery, [
+            targetUserId,
+            tenantId,
+        ]);
+        const deletedUserEmail = deleteResult.rows[0]?.email;
+
+        await client.query("COMMIT");
+
+        return {
+            message: `User account for ${deletedUserEmail} deleted successfully.`,
+        };
+    } catch (error) {
+        await client.query("ROLLBACK");
+        if (error.errorCode) throw error;
+        throw createError(
+            "INTERNAL_SERVER_ERROR",
+            "Internal server error during account deletion",
+            error
+        );
+    } finally {
+        client.release();
+    }
+}
+
 module.exports = {
     registerUser,
     verifyMail,
@@ -902,4 +1011,5 @@ module.exports = {
     refresh2FABackupCodes,
     updateUserRole,
     getProfile,
+    deleteUser,
 };

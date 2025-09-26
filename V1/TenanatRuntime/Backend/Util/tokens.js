@@ -8,7 +8,7 @@ function generateAccessToken(user) {
             role: user.role, // Use 'role' from the user object
         },
         process.env.JWT_ACCESS_SECRET,
-        { expiresIn: "5m" } // Access token lifetime is 5 minutes [cite: 1325, 1324]
+        { expiresIn: "50m" } // Access token lifetime is 5 minutes [cite: 1325, 1324]
     );
 }
 

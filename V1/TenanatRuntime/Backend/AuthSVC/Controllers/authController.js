@@ -699,9 +699,11 @@ async function updateUserRole(req, res, next) {
     }
 
     // The dynamic permission check happens here.
-    const hasPermission = await rolesUtil.checkRoleUpdatePermissions(
+    const hasPermission = await rolesUtil.checkRoleSpecificPermission(
         userId,
-        newRole
+        targetUserId,
+        newRole,
+        "change_role_to"
     );
 
     if (!hasPermission) {
@@ -732,7 +734,6 @@ async function updateUserRole(req, res, next) {
 async function getProfile(req, res, next) {
     const userId = req.user.id;
 
-    // 1. Input Validation
     if (!userId) {
         // Use the centralized error handling module
         return next(
@@ -755,15 +756,128 @@ async function getProfile(req, res, next) {
         );
     }
 
+    // Target user ID is optional (can be from route param or query/body).
+    // If not provided, the user is looking up their own profile.
+    const targetUserId = req.params.targetUserId || userId;
+
+    const isSelfLookup = targetUserId === userId;
+
+    if (!targetUserId) {
+        // Use the centralized error handling module
+        return next(
+            createError(
+                "BAD_REQUEST",
+                "User Id is required",
+                new Error("Target User Id Doesn't Exist")
+            )
+        );
+    }
+
+    if (!feildValidator.isValidUUID(targetUserId)) {
+        // Use the centralized error handling module
+        return next(
+            createError(
+                "BAD_REQUEST",
+                "User Id is Invalid",
+                new Error(`Target User Id is Invalid: ${targetUserId}`)
+            )
+        );
+    }
+
+    // 1. Authorization Check for Viewing Others' Profiles
+    if (!isSelfLookup) {
+        // If the user is NOT looking up their own profile, perform the granular check.
+
+        // Pass null for targetRoleName, forcing the utility to fetch the target user's current role
+        const hasPermission = await rolesUtil.checkRoleSpecificPermission(
+            userId,
+            targetUserId,
+            null, // targetRoleName is null because we check the target user's current role
+            "view_profile_of_role" // New prefix for profile viewing permission
+        );
+
+        if (!hasPermission) {
+            return next(
+                createError(
+                    "FORBIDDEN",
+                    "You do not have permission to view this user's profile."
+                )
+            );
+        }
+    }
+
     try {
         // 2. Call the Service Layer
-        const profileMessage = await authService.getProfile(userId);
+        const profileMessage = await authService.getProfile(targetUserId);
 
         // 3. Send the Response
         return res.status(201).json(profileMessage);
     } catch (err) {
         // 4. Handle Errors from the Service Layer
         // Pass the error to the Express error handling middleware
+        return next(err);
+    }
+}
+
+async function deleteUser(req, res, next) {
+    // Authenticated user's information (the one making the request)
+    const userId = req.user.id;
+
+    // Target user ID to be deleted (from request body, or defaults to self-deletion)
+    const {
+        targetUserId: targetUserIdFromReq,
+        password,
+        totp,
+        backupCode,
+    } = req.body;
+
+    // Determine the target: if no ID is provided, it's self-deletion.
+    const targetUserId = targetUserIdFromReq || userId;
+    const isSelfDeletion = targetUserId === userId;
+
+    // 1. Core Input Validation
+
+    if (!feildValidator.isValidUUID(targetUserId)) {
+        return next(createError("BAD_REQUEST", "Target User ID is invalid."));
+    }
+
+    // 2. Authorization Check for Deleting Others
+    if (!isSelfDeletion) {
+        // If it's NOT self-deletion, we need the specific admin permission
+        // The dynamic permission check happens here.
+        const hasPermission = await rolesUtil.checkRoleSpecificPermission(
+            userId,
+            targetUserId,
+            null,
+            "delete_user_with_role"
+        );
+
+        if (!hasPermission) {
+            return next(
+                createError(
+                    "FORBIDDEN",
+                    "You do not have permission to delete other user accounts."
+                )
+            );
+        }
+    }
+    // Note: The admin's password and 2FA are still required for the 'deleteUser' service call
+    // to prove the admin's identity, as this is a destructive action.
+
+    try {
+        // 3. Call the Service Layer
+        const deleteMessage = await authService.deleteUser(
+            targetUserId,
+            userId, // Pass the requester's ID
+            password,
+            totp,
+            backupCode
+        );
+
+        // 4. Send the Response
+        return res.status(200).json(deleteMessage);
+    } catch (err) {
+        // 5. Handle Errors from the Service Layer
         return next(err);
     }
 }
@@ -783,4 +897,5 @@ module.exports = {
     refresh2FABackupCodes,
     updateUserRole,
     getProfile,
+    deleteUser,
 };

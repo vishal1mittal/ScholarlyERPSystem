@@ -1,8 +1,13 @@
 const express = require("express");
 const loggingMiddleware = require("./Logging/loggingMiddleware");
 const errorHandler = require("./Logging/errorLoggerMiddleware");
-const tenantRoutes = require("./TenantSVC/Routes/tenantRoutes");
 const authRoutes = require("./AuthSVC/Routes/authRoutes");
+const tenantRoutes = require("./TenantSVC/Routes/tenantRoutes");
+const studentRoutes = require("./TenantSVC/Routes/studentRoutes");
+const facultyRoutes = require("./TenantSVC/Routes/facultyRoutes");
+const placementRoutes = require("./TenantSVC/Routes/placementRoutes");
+const eventRoutes = require("./TenantSVC/Routes/eventRoutes");
+const libraryRoutes = require("./TenantSVC/Routes/libraryRoutes");
 const { swaggerUi, swaggerSpec } = require("./swagger"); // add this
 
 require("dotenv").config();
@@ -14,8 +19,13 @@ app.use(loggingMiddleware);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Mount the tenant routes under the /api/tenants base path
-app.use("/api/v1/tenants", tenantRoutes);
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/tenants", tenantRoutes);
+app.use("/api/v1/students", studentRoutes);
+app.use("/api/v1/faculties", facultyRoutes);
+app.use("/api/v1/placements", placementRoutes);
+app.use("/api/v1/events", eventRoutes);
+app.use("/api/v1/library", libraryRoutes);
 
 app.use(errorHandler);
 

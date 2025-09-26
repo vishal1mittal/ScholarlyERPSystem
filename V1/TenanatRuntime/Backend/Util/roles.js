@@ -192,9 +192,84 @@ async function checkRoleUpdatePermissions(actingUserId, newRole) {
     }
 }
 
+// Renamed to be more general
+async function checkRoleSpecificPermission(
+    userId,
+    targetUserId,
+    targetRoleName,
+    permissionPrefix
+) {
+    const client = await db.pool.connect();
+    const tenantId = process.env.TENANT_ID;
+    try {
+        // 1. Find the acting user's role ID
+        const actingUserRoleQuery = `
+            SELECT u.role_id FROM users u
+            WHERE u.id = $1 AND u.tenant_id = $2;
+        `;
+        const actingUserRoleResult = await client.query(actingUserRoleQuery, [
+            userId,
+            tenantId,
+        ]);
+
+        const actingUser = actingUserRoleResult.rows[0];
+
+        if (!actingUser) {
+            return false;
+        }
+
+        const actingRoleId = actingUser.role_id;
+
+        // 2. Get the TARGET user's CURRENT role Name (The user being affected)
+        const targetUserRoleQuery = `
+            SELECT r.name AS role_name
+            FROM users u
+            JOIN roles r ON u.role_id = r.id
+            WHERE u.id = $1 AND u.tenant_id = $2;
+        `;
+        const targetUserRoleResult = await client.query(targetUserRoleQuery, [
+            targetUserId,
+            tenantId,
+        ]);
+        const targetUserRole = targetUserRoleResult.rows[0]?.role_name;
+
+        if (!targetUserRole) {
+            // The target user must exist and have a role to perform an action against them
+            return false;
+        }
+        // 3. Determine the ROLE NAME to check permission against:
+        //    - If 'targetRoleName' is provided (e.g., for an update), use it.
+        //    - Otherwise, use the 'targetUserRole' (e.g., for deletion).
+        const roleToCheck = targetRoleName || targetUserRole;
+
+        const permissionName = `${permissionPrefix}_${roleToCheck.toLowerCase()}`;
+
+        // 4. Check if the acting user's role has the specific permission
+        const permissionQuery = `
+            SELECT 1 FROM role_permissions rp
+            JOIN permissions p ON rp.permission_id = p.id
+            WHERE rp.role_id = $1 AND p.name = $2;
+        `;
+
+        const permissionResult = await client.query(permissionQuery, [
+            actingRoleId,
+            permissionName,
+        ]);
+
+        return permissionResult.rows.length > 0;
+    } catch (error) {
+        // Log the error but don't throw, as a permission check should return false, not crash the app
+        console.error("Error checking role permissions:", error);
+        return false;
+    } finally {
+        client.release();
+    }
+}
+
 module.exports = {
     getValidRoles,
     getUserPermissions,
     getLeastPrivilegedRole,
     checkRoleUpdatePermissions,
+    checkRoleSpecificPermission,
 };
